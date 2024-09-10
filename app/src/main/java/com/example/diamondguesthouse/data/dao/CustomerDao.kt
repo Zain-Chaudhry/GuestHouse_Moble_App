@@ -1,4 +1,40 @@
 package com.example.diamondguesthouse.data.dao
 
-class CustomerDao {
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.example.diamondguesthouse.data.model.CustomerEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface CustomerDao {
+
+    // Retrieve all customer records
+    @Query("SELECT * FROM customers")
+    fun getAllCustomers(): Flow<List<CustomerEntity>>
+
+    // Insert customer record
+    @Insert
+    suspend fun insertCustomer(customer: CustomerEntity)
+
+    @Delete
+    suspend fun deleteCustomer(customer: CustomerEntity)
+
+    @Update
+    suspend fun updateCustomer(customer: CustomerEntity)
+
+//    // Retrieve customer by CNIC or Passport
+//    @Query("SELECT * FROM customers WHERE cnic = :cnic OR passportNo = :passportNo LIMIT 1")
+//    fun getCustomerByCnicOrPassport(cnic: String?, passportNo: String?): CustomerEntity?
+//
+//    // Get check-ins and check-outs for today
+//    @Query("SELECT COUNT(*) FROM customers WHERE checkInDate = :today")
+//     fun getCheckIns(today: Long): Int
+//
+//    @Query("SELECT COUNT(*) FROM customers WHERE checkOutDate = :today")
+//    fun getCheckOuts(today: Long): Int
+
+
 }

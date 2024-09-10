@@ -1,18 +1,27 @@
 package com.example.diamondguesthouse.data
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.diamondguesthouse.data.dao.RoomDao
-import com.example.diamondguesthouse.data.model.RoomEntity
+import com.example.diamondguesthouse.data.dao.CustomerDao
+import com.example.diamondguesthouse.data.model.CustomerEntity
 
 
-@Database(entities = [RoomEntity::class], version = 1)
-abstract class RoomsDatabase: RoomDatabase() {
-    abstract fun roomDao(): RoomDao
+@Database(entities = [CustomerEntity::class], version = 2)
+abstract class GuestHouseDatabase: RoomDatabase() {
+    abstract fun customerDao(): CustomerDao
 
-    comanion object {
-        const val DATABASE_NAME = "rooms_database"
-        
+    companion object {
+        const val DATABASE_NAME = "guestHouse_database"
+        fun getDatabase(context: Context): GuestHouseDatabase {
+            return Room.databaseBuilder(
+                context,
+                GuestHouseDatabase::class.java,
+                DATABASE_NAME
+            ).build()
+        }
+
     }
 
 }

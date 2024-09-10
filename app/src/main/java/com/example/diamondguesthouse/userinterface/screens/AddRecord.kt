@@ -1,7 +1,8 @@
 package com.example.diamondguesthouse.userinterface.screens
-
-//import androidx.compose.foundation.layout.BoxScopeInstance.align
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -9,9 +10,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,14 +28,13 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,17 +48,26 @@ import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.ui.theme.DiamondGuestHouseTheme
 import com.example.diamondguesthouse.userinterface.components.districtsMap
 import com.example.diamondguesthouse.userinterface.components.provinces
-
+import com.example.diamondguesthouse.userinterface.components.textfield.CustomTextField
+import com.example.diamondguesthouse.userinterface.components.textfield.TimeField
+import com.example.diamondguesthouse.userinterface.components.textfield.ValidationType
+import com.example.diamondguesthouse.viewmodel.AddRecordViewModel
+import com.example.diamondguesthouse.viewmodel.AddRecordViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun AddRecord(navController: NavController) {
-    var selectedTab by remember { mutableIntStateOf(1) }
+    val viewModel: AddRecordViewModel = AddRecordViewModelFactory(LocalContext.current).create(
+        AddRecordViewModel::class.java)
+    val selectedTab = remember { mutableIntStateOf(0) }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (topBar, nameRow, surface) = createRefs()
 
-            // Top Bar Image
             Image(
                 painter = painterResource(id = R.drawable.ic_topbar),
                 contentDescription = null,
@@ -66,8 +77,6 @@ fun AddRecord(navController: NavController) {
                     end.linkTo(parent.end)
                 }
             )
-
-            // Name Row containing back arrow, title, and notification icon
             Row(
                modifier = Modifier
                    .fillMaxWidth()
@@ -96,8 +105,6 @@ fun AddRecord(navController: NavController) {
                     contentDescription = null
                 )
             }
-
-            // Rounded Corner Surface
             Surface(
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
                 modifier = Modifier
@@ -114,16 +121,16 @@ fun AddRecord(navController: NavController) {
                 Column {
                     // Tab Row
                     TabRow(
-                        selectedTabIndex = selectedTab
+                        selectedTabIndex = selectedTab.intValue
                     ) {
                         Tab(
-                            selected = selectedTab == 0,
-                            onClick = { selectedTab = 0 },
+                            selected = selectedTab.intValue == 0,
+                            onClick = { selectedTab.intValue = 0 },
                             text = { Text("Local") }
                         )
                         Tab(
-                            selected = selectedTab == 1,
-                            onClick = { selectedTab = 1 },
+                            selected = selectedTab.intValue == 1,
+                            onClick = { selectedTab.intValue = 1 },
                             text = { Text("Foreigner") }
                         )
                     }
@@ -133,53 +140,295 @@ fun AddRecord(navController: NavController) {
                             .padding(16.dp)
                     ) {
                         item {
-                            if (selectedTab == 0) {
-                                LocalAddRecord()
+                            if (selectedTab.intValue == 0) {
+                                LocalAddRecord(
+                                    navController = navController,
+                                    viewModel = viewModel)
                             } else {
-                                ForeignAddRecord()
-                            }
-                        }
-
-                        // Submit Button
-                        item {
-                            Button(
-                                onClick = { /* Handle form submission */ },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                Text("Submit")
+                                ForeignAddRecord(
+                                    navController = navController,
+                                    viewModel = viewModel
+                                    )
                             }
                         }
                     }
-
                 }
             }
         }
     }
 }
 
+@SuppressLint("AutoboxingStateCreation")
 @Composable
-fun CustomTextField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var text by remember { mutableStateOf(value) }
+fun LocalAddRecord(navController: NavController, viewModel: AddRecordViewModel) {
 
-    OutlinedTextField(
-        value = text,
-        onValueChange = {
-            text = it
-            onValueChange(it)
-        },
-        label = { Text(label) },
-        modifier = modifier.fillMaxWidth()
+    val gender = listOf("Male", "Female")
+    val provinces = provinces
+    val districts = districtsMap[viewModel.selectedProvince] ?: listOf("Please Select Province")
+    val context = LocalContext.current
+
+    CustomTextField(
+        label = "CNIC",
+        value = viewModel.cnic ,
+        onValueChange = {viewModel.cnic = it},
+        validationType = ValidationType.CNIC
     )
+
+    CustomTextField(
+        label = "Name" ,
+        value = viewModel.name ,
+        onValueChange ={viewModel.name = it}
+    )
+
+    CustomTextField(
+        label = "Father's Name" ,
+        value = viewModel.fatherName ,
+        onValueChange ={viewModel.fatherName = it}
+    )
+
+        CustomTextField(
+        label = "Permanent Address" ,
+        value =viewModel.permanentAddress ,
+        onValueChange ={viewModel.permanentAddress = it}
+    )
+
+    CustomDropdown(
+        value = viewModel.selectedGender,
+        label = "Gender",
+        list = gender,
+        onSelectedChange = {newGender ->
+            viewModel.setGender(newGender)
+        }
+    )
+
+    CustomTextField(
+        label = "Cell No",
+        value = viewModel.cellNo,
+        onValueChange = { viewModel.cellNo = it },
+        validationType = ValidationType.MOBILE
+    )
+
+    CustomDropdown(
+        value = viewModel.selectedProvince,
+        label = "Province",
+        list = provinces,
+        onSelectedChange = { newProvence ->
+            viewModel.setProvince(newProvence)
+        }
+    )
+    LaunchedEffect(viewModel.selectedProvince) {
+        viewModel.selectedDistrict = "Please Select"
+    }
+
+    CustomDropdown(
+        value = viewModel.selectedDistrict,
+        label = "District",
+        list = districts,
+        onSelectedChange = { newDistrict ->
+            viewModel.setDistrict(newDistrict) }
+    )
+
+
+    CustomTextField(
+        label = "Purpose of Visit",
+        value = viewModel.purposeOfVisit,
+        onValueChange = { viewModel.purposeOfVisit = it }
+    )
+
+
+    CustomDateField(
+        label = "Check in Date",
+        value = viewModel.checkInDate,
+        onDateSelected = {},
+        isClickable = false
+    )
+
+    TimeField(
+        label = "Check In Time",
+        value = viewModel.checkInTime,
+        onTimeSelected = {},
+        isClickable = false
+    )
+
+    CustomDateField(
+        label = "Check Out Date",
+        value = viewModel.checkOutDate,
+        onDateSelected = {viewModel.checkOutDate = it},
+        isClickable = true
+    )
+
+    TimeField(
+        label = "Check Out Time",
+        value = viewModel.checkOutTime,
+        onTimeSelected = {viewModel.checkOutTime = it},
+        isClickable = true
+    )
+
+    CustomTextField(
+        label = "Room No",
+        value = viewModel.roomNo,
+        onValueChange = { viewModel.roomNo = it }
+    )
+    CustomTextField(
+        label = "Amount Received",
+        value = viewModel.roomPrice,
+        onValueChange = { viewModel.roomPrice = it  }
+    )
+
+    Button(
+        onClick = {
+           viewModel.submitLocalCustomer()
+            Toast.makeText(context, "Customer Added", Toast.LENGTH_SHORT).show()
+            navController.navigate("home")
+
+
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text("Submit")
+    }
+
 }
 
+@SuppressLint("AutoboxingStateCreation")
+@Composable
+fun ForeignAddRecord(navController: NavController, viewModel: AddRecordViewModel){
 
+
+    val gender = listOf("Male", "Female")
+    val context = LocalContext.current
+
+    CustomTextField(
+        label = "Name" ,
+        value = viewModel.name ,
+        onValueChange ={viewModel.name = it}
+    )
+
+    CustomTextField(
+        label = "Father's Name" ,
+        value = viewModel.fatherName,
+        onValueChange ={viewModel.fatherName = it}
+    )
+    CustomTextField(
+        label = "Passport Number",
+        value = viewModel.passportNo,
+        onValueChange = {viewModel.passportNo = it},
+        validationType = ValidationType.PASSPORT
+    )
+
+    // "+" symbol here
+
+
+    CustomDateField(
+        label = "Check Out Date",
+        value = viewModel.visaUpTill,
+        onDateSelected = {viewModel.visaUpTill = it},
+        isClickable = true
+    )
+
+    CustomTextField(
+        label = "Cell No",
+        value = viewModel.cellNo,
+        onValueChange = { viewModel.cellNo = it },
+        validationType = ValidationType.MOBILE
+    )
+
+    // Gender here
+    CustomDropdown(
+        value = viewModel.selectedGender,
+        label = "Gender",
+        list = gender,
+        onSelectedChange = {newGender ->
+            viewModel.setGender(newGender)
+        }
+    )
+
+    CustomTextField(
+        label = "Permanent Address" ,
+        value = viewModel.permanentAddress ,
+        onValueChange ={viewModel.permanentAddress = it}
+    )
+
+    CustomTextField(
+        label = "Country",
+        value = viewModel.country,
+        onValueChange = { viewModel.country = it }
+    )
+
+    CustomTextField(
+        label = "Last Visited Country",
+        value = viewModel.lastVisitedCountry,
+        onValueChange = { viewModel.lastVisitedCountry = it }
+    )
+
+    CustomTextField(
+        label = "NOC#",
+        value = viewModel.noc,
+        onValueChange = { viewModel.noc = it }
+    )
+
+
+    CustomTextField(
+        label = "Purpose of Visit",
+        value = viewModel.purposeOfVisit,
+        onValueChange = { viewModel.purposeOfVisit = it }
+    )
+
+    CustomDateField(
+        label = "Check in Date",
+        value = viewModel.checkInDate,
+        onDateSelected = {},
+        isClickable = false
+    )
+
+    TimeField(
+        label = "Check In Time",
+        value = viewModel.checkInTime,
+        onTimeSelected = {},
+        isClickable = false
+    )
+
+    CustomDateField(
+        label = "Check Out Date",
+        value = viewModel.checkOutDate,
+        onDateSelected = {viewModel.checkOutDate = it},
+        isClickable = true
+    )
+
+    TimeField(
+        label = "Check Out Time",
+        value = viewModel.checkOutTime,
+        onTimeSelected = {viewModel.checkOutTime = it},
+        isClickable = true)
+
+    CustomTextField(
+        label = "Room No",
+        value = viewModel.roomNo,
+        onValueChange = { viewModel.roomNo = it }
+    )
+    CustomTextField(
+        label = "Amount Received",
+        value = viewModel.roomPrice,
+        onValueChange = { viewModel.roomPrice = it }
+    )
+    Button(
+        onClick = {
+            viewModel.submitForeignCustomer()
+            Toast.makeText(context, "Customer Added", Toast.LENGTH_SHORT).show()
+            navController.navigate("home")
+
+
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text("Submit")
+    }
+
+}
 @Composable
 fun CustomDropdown(
     value: String,
@@ -187,264 +436,105 @@ fun CustomDropdown(
     list: List<String>,
     onSelectedChange: (String) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    val expanded = remember { mutableStateOf(false) }
 
     // Box to contain the dropdown and text field
     Box {
-        OutlinedTextField(
-            value = value, // This will show the selected gender
-            onValueChange = { /* No-op as it’s read-only */ },
-            label = { Text(text = label) }, // Label for the text field
-            readOnly = true, // Make it read-only to avoid direct input
-            trailingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_arrow_drop_down), contentDescription = null,
-                    modifier = Modifier.clickable { expanded = !expanded  })
-            },
-            modifier = Modifier.fillMaxWidth()
+        Column {
+            Text(text = label, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+            Spacer(modifier = Modifier.size(10.dp))
+            OutlinedTextField(
+                value = value,
+                onValueChange = { /* No-op as it’s read-only */ },
+//            label = { Text(text = label) },
+                readOnly = true,
+                trailingIcon = {
+                    Icon(painter = painterResource(id = R.drawable.ic_arrow_drop_down),
+                        contentDescription = null,
+                        modifier = Modifier.clickable { expanded.value = !expanded.value })
+                },
+                modifier = Modifier.fillMaxWidth()
 
-        )
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+        }
         // Dropdown menu
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false } // Close when clicked outside
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false } // Close when clicked outside
         ) {
             list.forEach{ item ->
                 DropdownMenuItem(text = { Text(text = item, fontSize = 13.sp, fontWeight = FontWeight.Medium) }, onClick = {
                     onSelectedChange(item)
-                    expanded = false
+                    expanded.value = false
                 })
             }
+
         }
     }
 }
 
 @Composable
-fun LocalAddRecord() {
-    var localName by remember { mutableStateOf("") }
-    var localFatherName by remember { mutableStateOf("") }
-    var localCellNo by remember { mutableStateOf("") }
-    var cnic by remember { mutableStateOf("") }
-    var localPermanentAddress by remember { mutableStateOf("") }
-    var localTemporaryAddress by remember { mutableStateOf("") }
-    var localPurposeOfVisit by remember { mutableStateOf("") }
-    var localRoomNo by remember { mutableStateOf("") }
-    val gender = listOf("Male", "Female")
-    var selectedGenderLocal by remember { mutableStateOf("Please Select") }
-    val provinces = provinces
-    var selectedProvince by remember { mutableStateOf("Please Select") }
-    var selectedDistrict by remember { mutableStateOf("Please Select") }
-    val districts = districtsMap[selectedProvince] ?: listOf("Please Select Province")
-    var temporaryProvince by remember { mutableStateOf("Please Select") }
-    var temporaryDistrict by remember { mutableStateOf("Please Select") }
-    val tempDistricts = districtsMap[temporaryDistrict] ?: listOf("Please Select  Temporary Province")
+fun CustomDateField(label: String, value: Long, onDateSelected: (date: Long) -> Unit, isClickable: Boolean) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
 
-    CustomTextField(
-        label = "CNIC",
-        value = cnic ,
-        onValueChange = {cnic = it}
-    )
-
-    CustomTextField(
-        label = "Name" ,
-        value = localName ,
-        onValueChange ={localName = it}
-    )
-
-    CustomTextField(
-        label = "Father's Name" ,
-        value = localFatherName ,
-        onValueChange ={localFatherName = it}
-    )
-
-    // "+" sign here
-
-    CustomTextField(
-        label = "Permanet Address" ,
-        value = localPermanentAddress ,
-        onValueChange ={localPermanentAddress = it}
-    )
-
-    // Gender here
-
-
-    CustomDropdown(
-        value = selectedGenderLocal,
-        label = "Gender",
-        list = gender,
-        onSelectedChange = {selectedGenderLocal = it})
-
-
-    CustomTextField(
-        label = "Cell No",
-        value = localCellNo,
-        onValueChange = { localCellNo = it }
-    )
-
-    // provence
-
-    CustomDropdown(
-        value = selectedProvince,
-        label = "Province",
-        list = com.example.diamondguesthouse.userinterface.components.provinces.sorted(),
-        onSelectedChange = { newProvence ->
-            selectedProvince = newProvence
-            selectedDistrict = "Please Select"
-        }
-    )
-    // Reset selectedDistrict when selectedProvince changes
-    LaunchedEffect(selectedProvince) {
-        selectedDistrict = "Please Select"
+    // Format the date for display (convert timestamp to a human-readable format)
+    val formattedDate = if (value != 0L) {
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date(value))
+    } else {
+        "Please Select"
     }
 
-    CustomDropdown(
-        value = selectedDistrict,
-        label = "District",
-        list = districts,
-        onSelectedChange = { newDistrct ->
-            selectedDistrict = newDistrct }
-    )
+    Text(text = label, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+    Spacer(modifier = Modifier.size(10.dp))
 
+    if (isClickable) {
+        OutlinedTextField(
+            value = formattedDate,
+            onValueChange = { /* No-op */ },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_calender),
+                    contentDescription = null,
+                    modifier = Modifier.clickable {
+                        DatePickerDialog(
+                            context,
+                            { _, year, month, dayOfMonth ->
+                                calendar.set(Calendar.YEAR, year)
+                                calendar.set(Calendar.MONTH, month)
+                                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-    CustomTextField(
-        label = "Temporary Address",
-        value = localTemporaryAddress,
-        onValueChange = { localTemporaryAddress = it }
-    )
-
-    // Temporary Provience
-    CustomDropdown(
-        value = temporaryProvince,
-        label = "Temporary Province",
-        list = com.example.diamondguesthouse.userinterface.components.provinces.sorted(),
-        onSelectedChange = { newTempProvence ->
-            temporaryProvince = newTempProvence
-            temporaryDistrict = "Please Select"
-        }
-    )
-
-    LaunchedEffect(temporaryProvince) {
-        temporaryDistrict = "Please Select"
+                                // Convert the selected date to a timestamp (Long)
+                                val selectedDateInMillis = calendar.timeInMillis
+                                onDateSelected(selectedDateInMillis)
+                            },
+                            calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH)
+                        ).show()
+                    }
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    } else {
+        OutlinedTextField(
+            value = formattedDate,
+            onValueChange = { /* No-op */ },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_calender),
+                    contentDescription = null
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 
-    // Temporary Distric
-
-    CustomDropdown(
-        value = temporaryDistrict,
-        label = "Temporary District",
-        list = tempDistricts,
-        onSelectedChange = { newTempDistrct ->
-            temporaryDistrict = newTempDistrct }
-    )
-
-
-
-
-    // total of Accompaning Guest
-
-    CustomTextField(
-        label = "Purpose of Visit",
-        value = localPurposeOfVisit,
-        onValueChange = { localPurposeOfVisit = it }
-    )
-
-    /* Check in date
-    * Check in time
-    * check out date
-    * check out time
-    * */
-
-    CustomTextField(
-        label = "Room No",
-        value = localRoomNo,
-        onValueChange = { localRoomNo = it }
-    )
-}
-
-
-@Composable
-fun ForeignAddRecord() {
-    var name by remember { mutableStateOf("") }
-    var fatherName by remember { mutableStateOf("") }
-    var cellNo by remember { mutableStateOf("") }
-    var permanentAddress by remember { mutableStateOf("") }
-    var purposeOfVisit by remember { mutableStateOf("") }
-    var roomNo by remember { mutableStateOf("") }
-    var country by remember { mutableStateOf("") }
-    var lastVisitedCountry by remember { mutableStateOf("") }
-    var passportNo by remember { mutableStateOf("") }
-    var noc by remember { mutableStateOf("") }
-
-    CustomTextField(
-        label = "Name" ,
-        value = name ,
-        onValueChange ={name = it}
-    )
-
-    CustomTextField(
-        label = "Father's Name" ,
-        value = fatherName ,
-        onValueChange ={fatherName = it}
-    )
-    CustomTextField(
-        label = "Passort Number",
-        value = passportNo,
-        onValueChange = {passportNo = it}
-    )
-
-    // "+" symbol here
-
-    // Visa up till here
-
-    CustomTextField(
-        label = "Cell No",
-        value = cellNo,
-        onValueChange = { cellNo = it }
-    )
-
-    // Gender here
-
-    CustomTextField(
-        label = "Permanet Address" ,
-        value = permanentAddress ,
-        onValueChange ={permanentAddress = it}
-    )
-
-    CustomTextField(
-        label = "Country",
-        value = country,
-        onValueChange = { country = it }
-    )
-
-    CustomTextField(
-        label = "Last Visited Country",
-        value = lastVisitedCountry,
-        onValueChange = { lastVisitedCountry = it }
-    )
-
-    CustomTextField(
-        label = "NOC#",
-        value = noc,
-        onValueChange = { noc = it }
-    )
-
-    // Total Guest here
-
-    CustomTextField(
-        label = "Purpose of Visit",
-        value = purposeOfVisit,
-        onValueChange = { purposeOfVisit = it }
-    )
-
-    /* Check in date
-    * Check in time
-    * check out date
-    * check out time
-    * */
-    CustomTextField(
-        label = "Room No",
-        value = roomNo,
-        onValueChange = { roomNo = it }
-    )
+    Spacer(modifier = Modifier.size(10.dp))
 }
 
 

@@ -20,10 +20,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,9 +39,14 @@ import com.example.diamondguesthouse.NavRoutes
 import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.ui.theme.DiamondGuestHouseTheme
 import com.example.diamondguesthouse.ui.theme.Zinc
+import com.example.diamondguesthouse.viewmodel.HomeViewModel
+import com.example.diamondguesthouse.viewmodel.HomeViewModelFactory
 
 @Composable
 fun HomeScreen(navController: NavController) {
+
+    val viewModel: HomeViewModel = HomeViewModelFactory(LocalContext.current).create(HomeViewModel::class.java)
+
   Surface(modifier = Modifier.fillMaxSize()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
           val (nameRow, topBar, list, card) = createRefs()
@@ -58,16 +65,23 @@ fun HomeScreen(navController: NavController) {
 
               }) {
               Column {
-                  Text(text = "Good Afternoon", style = MaterialTheme.typography.bodyLarge, color = Color.White)
+                  val greeting = viewModel.getGreetingMessage()
+                  Text(text = greeting , style = MaterialTheme.typography.bodyLarge, color = Color.White)
                   Text(text = "Welcome to Diamond Guesthouse", style = MaterialTheme.typography.labelLarge, color = Color.White)
               }
           }
+
+          val state = viewModel.customers.collectAsState(initial = emptyList())
+          val monthlyIncome = viewModel.getMonthlyIncome(state.value)
+          val checkIns = viewModel.getCheckIns(state.value)
+          val checkOuts = viewModel.getCheckOuts(state.value)
+
           CardItem(modifier = Modifier
               .constrainAs(card){
                   top.linkTo(nameRow.bottom)
                   start.linkTo(parent.start)
                   end.linkTo(parent.end)
-              })
+              }, monthlyIncome, checkIns, checkOuts)
           Column(modifier = Modifier.constrainAs(list){
               top.linkTo(card.bottom, margin = 30.dp)
               start.linkTo(parent.start)
@@ -102,16 +116,13 @@ fun HomeScreen(navController: NavController) {
                       navController = navController,
                       navigateTo = NavRoutes.SignUp)
               }
-
-
           }
-
       }
   }
 }
 
 @Composable
-fun CardItem(modifier: Modifier) {
+fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkOuts: String) {
     Column(modifier = modifier
         .padding(16.dp)
         .fillMaxWidth()
@@ -130,7 +141,7 @@ fun CardItem(modifier: Modifier) {
                     color = Color.White
                 )
                 Text(
-                    text = "150000 Rs",
+                    text = monthlyIncome,
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold)
@@ -145,9 +156,9 @@ fun CardItem(modifier: Modifier) {
 
             Column {
                 Spacer(modifier = Modifier.size(20.dp))
-                CardRowItem(image = R.drawable.ic_down_circle_arrow, title = "Today's Check Ins", rooms = "10" )
+                CardRowItem(image = R.drawable.ic_down_circle_arrow, title = "Today's Check Ins", rooms = checkIns )
                 Spacer(modifier = Modifier.size(10.dp))
-                CardRowItem(image = R.drawable.ic_up_circle_arrow, title ="Today's Check Outs", rooms = "5" )
+                CardRowItem(image = R.drawable.ic_up_circle_arrow, title ="Today's Check Outs", rooms = checkOuts )
             }
 
 
