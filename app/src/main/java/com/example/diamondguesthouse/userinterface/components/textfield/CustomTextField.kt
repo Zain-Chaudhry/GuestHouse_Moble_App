@@ -1,5 +1,6 @@
 package com.example.diamondguesthouse.userinterface.components.textfield
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
@@ -128,7 +129,8 @@ fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    validationType: ValidationType? = null
+    validationType: ValidationType? = null,
+    keyboardOptions: KeyboardOptions
 ) {
     var text by remember { mutableStateOf(value) }
     var errorMessage by remember { mutableStateOf("") }
@@ -176,7 +178,8 @@ fun CustomTextField(
         value = text,
         onValueChange = { handleValueChange(it) },
         label = { Text(label) },
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        keyboardOptions = keyboardOptions
     )
     if (errorMessage.isNotEmpty()) {
         Text(
@@ -249,3 +252,68 @@ fun TimeField(label: String, value: Long, onTimeSelected: (Long) -> Unit, isClic
         )
     }
 }
+
+
+@Composable
+fun CustomDateField(label: String, value: Long, onDateSelected: (date: Long) -> Unit, isClickable: Boolean) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    // Format the date for display (convert timestamp to a human-readable format)
+    val formattedDate = if (value != 0L) {
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date(value))
+    } else {
+        "Please Select"
+    }
+
+    Text(text = label, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+    Spacer(modifier = Modifier.size(10.dp))
+
+    if (isClickable) {
+        OutlinedTextField(
+            value = formattedDate,
+            onValueChange = { /* No-op */ },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_calender),
+                    contentDescription = null,
+                    modifier = Modifier.clickable {
+                        DatePickerDialog(
+                            context,
+                            { _, year, month, dayOfMonth ->
+                                calendar.set(Calendar.YEAR, year)
+                                calendar.set(Calendar.MONTH, month)
+                                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                                // Convert the selected date to a timestamp (Long)
+                                val selectedDateInMillis = calendar.timeInMillis
+                                onDateSelected(selectedDateInMillis)
+                            },
+                            calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH)
+                        ).show()
+                    }
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    } else {
+        OutlinedTextField(
+            value = formattedDate,
+            onValueChange = { /* No-op */ },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_calender),
+                    contentDescription = null
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+
+    Spacer(modifier = Modifier.size(10.dp))
+}
+
