@@ -1,6 +1,5 @@
 package com.example.diamondguesthouse.userinterface.screens
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -27,7 +27,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,22 +45,21 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.diamondguesthouse.R
+import com.example.diamondguesthouse.data.GuestHouseDatabase
 import com.example.diamondguesthouse.ui.theme.DiamondGuestHouseTheme
-import com.example.diamondguesthouse.userinterface.components.districtsMap
-import com.example.diamondguesthouse.userinterface.components.provinces
+import com.example.diamondguesthouse.userinterface.components.textfield.CustomDateField
 import com.example.diamondguesthouse.userinterface.components.textfield.CustomTextField
 import com.example.diamondguesthouse.userinterface.components.textfield.TimeField
 import com.example.diamondguesthouse.userinterface.components.textfield.ValidationType
 import com.example.diamondguesthouse.viewmodel.AddRecordViewModel
 import com.example.diamondguesthouse.viewmodel.AddRecordViewModelFactory
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import com.example.diamondguesthouse.viewmodel.CustomerEntityData
 
 @Composable
 fun AddRecord(navController: NavController) {
-    val viewModel: AddRecordViewModel = AddRecordViewModelFactory(LocalContext.current).create(
+
+    val context = LocalContext.current
+    val viewModel: AddRecordViewModel = AddRecordViewModelFactory(context).create(
         AddRecordViewModel::class.java)
     val selectedTab = remember { mutableIntStateOf(0) }
 
@@ -78,13 +77,13 @@ fun AddRecord(navController: NavController) {
                 }
             )
             Row(
-               modifier = Modifier
-                   .fillMaxWidth()
-                   .padding(top = 80.dp, start = 16.dp, end = 16.dp)
-                   .constrainAs(nameRow) {
-                       top.linkTo(parent.top)
-                       start.linkTo(parent.start)
-                   },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 80.dp, start = 16.dp, end = 16.dp)
+                    .constrainAs(nameRow) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                    },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -119,7 +118,7 @@ fun AddRecord(navController: NavController) {
                     }
             ) {
                 Column {
-                    // Tab Row
+                    
                     TabRow(
                         selectedTabIndex = selectedTab.intValue
                     ) {
@@ -141,14 +140,9 @@ fun AddRecord(navController: NavController) {
                     ) {
                         item {
                             if (selectedTab.intValue == 0) {
-                                LocalAddRecord(
-                                    navController = navController,
-                                    viewModel = viewModel)
-                            } else {
-                                ForeignAddRecord(
-                                    navController = navController,
-                                    viewModel = viewModel
-                                    )
+                                CustomerForm(navController = navController, viewModel = viewModel, isLocal = true)
+                            } else{
+                                CustomerForm(navController = navController, viewModel = viewModel, isLocal = false)
                             }
                         }
                     }
@@ -158,84 +152,20 @@ fun AddRecord(navController: NavController) {
     }
 }
 
-@SuppressLint("AutoboxingStateCreation")
 @Composable
-fun LocalAddRecord(navController: NavController, viewModel: AddRecordViewModel) {
-
-    val gender = listOf("Male", "Female")
-    val provinces = provinces
-    val districts = districtsMap[viewModel.selectedProvince] ?: listOf("Please Select Province")
+fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, isLocal: Boolean = true) {
+    
+    val roomNum = listOf("110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120")
     val context = LocalContext.current
 
-    CustomTextField(
-        label = "CNIC",
-        value = viewModel.cnic ,
-        onValueChange = {viewModel.cnic = it},
-        validationType = ValidationType.CNIC
-    )
-
-    CustomTextField(
-        label = "Name" ,
-        value = viewModel.name ,
-        onValueChange ={viewModel.name = it}
-    )
-
-    CustomTextField(
-        label = "Father's Name" ,
-        value = viewModel.fatherName ,
-        onValueChange ={viewModel.fatherName = it}
-    )
-
-        CustomTextField(
-        label = "Permanent Address" ,
-        value =viewModel.permanentAddress ,
-        onValueChange ={viewModel.permanentAddress = it}
-    )
-
     CustomDropdown(
-        value = viewModel.selectedGender,
-        label = "Gender",
-        list = gender,
-        onSelectedChange = {newGender ->
-            viewModel.setGender(newGender)
-        }
+        value = viewModel.roomNo,
+        label = "Room No.",
+        list = roomNum,
+        onSelectedChange = {newRoom ->
+            viewModel.roomNo = newRoom},
+        isAvailable = true
     )
-
-    CustomTextField(
-        label = "Cell No",
-        value = viewModel.cellNo,
-        onValueChange = { viewModel.cellNo = it },
-        validationType = ValidationType.MOBILE
-    )
-
-    CustomDropdown(
-        value = viewModel.selectedProvince,
-        label = "Province",
-        list = provinces,
-        onSelectedChange = { newProvence ->
-            viewModel.setProvince(newProvence)
-        }
-    )
-    LaunchedEffect(viewModel.selectedProvince) {
-        viewModel.selectedDistrict = "Please Select"
-    }
-
-    CustomDropdown(
-        value = viewModel.selectedDistrict,
-        label = "District",
-        list = districts,
-        onSelectedChange = { newDistrict ->
-            viewModel.setDistrict(newDistrict) }
-    )
-
-
-    CustomTextField(
-        label = "Purpose of Visit",
-        value = viewModel.purposeOfVisit,
-        onValueChange = { viewModel.purposeOfVisit = it }
-    )
-
-
     CustomDateField(
         label = "Check in Date",
         value = viewModel.checkInDate,
@@ -263,170 +193,215 @@ fun LocalAddRecord(navController: NavController, viewModel: AddRecordViewModel) 
         onTimeSelected = {viewModel.checkOutTime = it},
         isClickable = true
     )
-
-    CustomTextField(
-        label = "Room No",
-        value = viewModel.roomNo,
-        onValueChange = { viewModel.roomNo = it }
-    )
+    
     CustomTextField(
         label = "Amount Received",
         value = viewModel.roomPrice,
-        onValueChange = { viewModel.roomPrice = it  }
+        onValueChange = { viewModel.roomPrice = it  },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
-    Button(
-        onClick = {
-           viewModel.submitLocalCustomer()
-            Toast.makeText(context, "Customer Added", Toast.LENGTH_SHORT).show()
-            navController.navigate("home")
+    if(isLocal) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_add_person),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                viewModel.addCustomerRecord()
+
+            }
+                .padding(vertical = 10.dp)
+
+        )
+
+        // Display list of customer records
+        Column {
+            viewModel.customerRecords.forEachIndexed { index, record ->
+                LocalAddRecord(viewModel, record, index)
+            }
+        }
+
+        if (viewModel.customerRecords.isNotEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_remove_person),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    viewModel.removeCustomerRecord(viewModel.customerRecords.size - 1)
+                }
+                    .padding(vertical = 10.dp)
+
+            )
+        }
+    } else {
+        Image(
+            painter = painterResource(id = R.drawable.ic_add_person),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                viewModel.addCustomerRecord()
+
+            }
+                .padding(vertical = 10.dp)
+
+        )
+
+        // Display list of customer records
+        Column {
+            viewModel.customerRecords.forEachIndexed { index, record ->
+                ForeignAddRecord(viewModel, record, index)
+            }
+        }
+
+        if (viewModel.customerRecords.isNotEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_remove_person),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    viewModel.removeCustomerRecord(viewModel.customerRecords.size - 1)
+                }
+                    .padding(vertical = 10.dp)
+
+            )
+        }
+
+    }
+
+    // Submit button
+    Button(onClick = {
+        viewModel.submitRecord(
+            roomDao = GuestHouseDatabase.getDatabase(context).roomDao()
+        )
+
+        Toast.makeText(context, "Record Added", Toast.LENGTH_SHORT).show()
+        navController.navigate("home")
 
 
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
+    }, modifier = Modifier.fillMaxWidth()) {
         Text("Submit")
     }
+    
+}
+
+
+@SuppressLint("AutoboxingStateCreation")
+@Composable
+fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntityData, recordIndex: Int) {
+
+    val gender = listOf("Male", "Female")
+
+    CustomTextField(
+        label = "CNIC",
+        value = customerRecord.cnic.value?: ""  ,
+        onValueChange = {viewModel.customerRecords[recordIndex].cnic.value = it},
+        validationType = ValidationType.CNIC,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
+
+    CustomTextField(
+        label = "Name" ,
+        value = customerRecord.name.value ,
+        onValueChange ={viewModel.customerRecords[recordIndex].name.value = it},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    )
+
+    CustomTextField(
+        label = "Father's Name" ,
+        value = customerRecord.fatherName.value ,
+        onValueChange ={viewModel.customerRecords[recordIndex].fatherName.value = it},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    )
+
+    CustomTextField(
+        label = "Permanent Address" ,
+        value = customerRecord.permanentAddress.value ,
+        onValueChange ={viewModel.customerRecords[recordIndex].permanentAddress.value = it},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    )
+
+    CustomDropdown(
+        value = customerRecord.selectedGender.value,
+        label = "Gender",
+        list = gender,
+        onSelectedChange = { newGender ->
+            viewModel.customerRecords[recordIndex].selectedGender.value = newGender
+        }
+    )
+
+    CustomTextField(
+        label = "Cell No",
+        value = customerRecord.cellNo.value,
+        onValueChange = { viewModel.customerRecords[recordIndex].cellNo.value = it },
+        validationType = ValidationType.MOBILE,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
 
 }
 
 @SuppressLint("AutoboxingStateCreation")
 @Composable
-fun ForeignAddRecord(navController: NavController, viewModel: AddRecordViewModel){
+fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntityData, recordIndex: Int){
 
 
     val gender = listOf("Male", "Female")
-    val context = LocalContext.current
 
     CustomTextField(
         label = "Name" ,
-        value = viewModel.name ,
-        onValueChange ={viewModel.name = it}
+        value = customerRecord.name.value ,
+        onValueChange ={viewModel.customerRecords[recordIndex].name.value = it},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
     CustomTextField(
         label = "Father's Name" ,
-        value = viewModel.fatherName,
-        onValueChange ={viewModel.fatherName = it}
+        value = customerRecord.fatherName.value,
+        onValueChange ={viewModel.customerRecords[recordIndex].fatherName.value = it},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
     CustomTextField(
         label = "Passport Number",
-        value = viewModel.passportNo,
-        onValueChange = {viewModel.passportNo = it},
-        validationType = ValidationType.PASSPORT
+        value = customerRecord.passportNo.value?: "",
+        onValueChange = {viewModel.customerRecords[recordIndex].passportNo.value = it},
+        validationType = ValidationType.PASSPORT,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
-    // "+" symbol here
-
-
     CustomDateField(
-        label = "Check Out Date",
-        value = viewModel.visaUpTill,
-        onDateSelected = {viewModel.visaUpTill = it},
+        label = " Visa up till",
+        value = customerRecord.visaUpTill.value?: 0L,
+        onDateSelected = {viewModel.customerRecords[recordIndex].visaUpTill.value = it},
         isClickable = true
     )
 
     CustomTextField(
         label = "Cell No",
-        value = viewModel.cellNo,
-        onValueChange = { viewModel.cellNo = it },
-        validationType = ValidationType.MOBILE
+        value =  customerRecord.cellNo.value,
+        onValueChange = { viewModel.customerRecords[recordIndex].cellNo.value = it },
+        validationType = ValidationType.MOBILE,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
     // Gender here
     CustomDropdown(
-        value = viewModel.selectedGender,
+        value = customerRecord.selectedGender.value,
         label = "Gender",
         list = gender,
         onSelectedChange = {newGender ->
-            viewModel.setGender(newGender)
+            viewModel.customerRecords[recordIndex].selectedGender.value = newGender
         }
     )
 
     CustomTextField(
         label = "Permanent Address" ,
-        value = viewModel.permanentAddress ,
-        onValueChange ={viewModel.permanentAddress = it}
+        value = customerRecord.permanentAddress.value ,
+        onValueChange ={viewModel.customerRecords[recordIndex].permanentAddress.value = it},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
     CustomTextField(
         label = "Country",
-        value = viewModel.country,
-        onValueChange = { viewModel.country = it }
+        value = customerRecord.country.value?: "",
+        onValueChange = { viewModel.customerRecords[recordIndex].country.value = it },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
-    CustomTextField(
-        label = "Last Visited Country",
-        value = viewModel.lastVisitedCountry,
-        onValueChange = { viewModel.lastVisitedCountry = it }
-    )
-
-    CustomTextField(
-        label = "NOC#",
-        value = viewModel.noc,
-        onValueChange = { viewModel.noc = it }
-    )
-
-
-    CustomTextField(
-        label = "Purpose of Visit",
-        value = viewModel.purposeOfVisit,
-        onValueChange = { viewModel.purposeOfVisit = it }
-    )
-
-    CustomDateField(
-        label = "Check in Date",
-        value = viewModel.checkInDate,
-        onDateSelected = {},
-        isClickable = false
-    )
-
-    TimeField(
-        label = "Check In Time",
-        value = viewModel.checkInTime,
-        onTimeSelected = {},
-        isClickable = false
-    )
-
-    CustomDateField(
-        label = "Check Out Date",
-        value = viewModel.checkOutDate,
-        onDateSelected = {viewModel.checkOutDate = it},
-        isClickable = true
-    )
-
-    TimeField(
-        label = "Check Out Time",
-        value = viewModel.checkOutTime,
-        onTimeSelected = {viewModel.checkOutTime = it},
-        isClickable = true)
-
-    CustomTextField(
-        label = "Room No",
-        value = viewModel.roomNo,
-        onValueChange = { viewModel.roomNo = it }
-    )
-    CustomTextField(
-        label = "Amount Received",
-        value = viewModel.roomPrice,
-        onValueChange = { viewModel.roomPrice = it }
-    )
-    Button(
-        onClick = {
-            viewModel.submitForeignCustomer()
-            Toast.makeText(context, "Customer Added", Toast.LENGTH_SHORT).show()
-            navController.navigate("home")
-
-
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text("Submit")
-    }
 
 }
 @Composable
@@ -434,7 +409,8 @@ fun CustomDropdown(
     value: String,
     label: String,
     list: List<String>,
-    onSelectedChange: (String) -> Unit
+    onSelectedChange: (String) -> Unit,
+    isAvailable: Boolean = true
 ) {
     val expanded = remember { mutableStateOf(false) }
 
@@ -471,71 +447,13 @@ fun CustomDropdown(
             }
 
         }
+        if (!isAvailable) {
+            Toast.makeText(LocalContext.current, "Please Select", Toast.LENGTH_SHORT).show()
+
+        }
     }
 }
 
-@Composable
-fun CustomDateField(label: String, value: Long, onDateSelected: (date: Long) -> Unit, isClickable: Boolean) {
-    val context = LocalContext.current
-    val calendar = Calendar.getInstance()
-
-    // Format the date for display (convert timestamp to a human-readable format)
-    val formattedDate = if (value != 0L) {
-        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date(value))
-    } else {
-        "Please Select"
-    }
-
-    Text(text = label, fontSize = 16.sp, fontWeight = FontWeight.Medium)
-    Spacer(modifier = Modifier.size(10.dp))
-
-    if (isClickable) {
-        OutlinedTextField(
-            value = formattedDate,
-            onValueChange = { /* No-op */ },
-            readOnly = true,
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_calender),
-                    contentDescription = null,
-                    modifier = Modifier.clickable {
-                        DatePickerDialog(
-                            context,
-                            { _, year, month, dayOfMonth ->
-                                calendar.set(Calendar.YEAR, year)
-                                calendar.set(Calendar.MONTH, month)
-                                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                                // Convert the selected date to a timestamp (Long)
-                                val selectedDateInMillis = calendar.timeInMillis
-                                onDateSelected(selectedDateInMillis)
-                            },
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)
-                        ).show()
-                    }
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-    } else {
-        OutlinedTextField(
-            value = formattedDate,
-            onValueChange = { /* No-op */ },
-            readOnly = true,
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_calender),
-                    contentDescription = null
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-
-    Spacer(modifier = Modifier.size(10.dp))
-}
 
 
 
@@ -548,3 +466,5 @@ fun AddRecordPreview() {
         AddRecord(rememberNavController())
     }
 }
+
+
