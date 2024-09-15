@@ -71,7 +71,7 @@ fun HomeScreen(navController: NavController) {
               }
           }
 
-          val state = viewModel.customers.collectAsState(initial = emptyList())
+          val state = viewModel.roomsWithCustomers.collectAsState(initial = emptyList())
           val monthlyIncome = viewModel.getMonthlyIncome(state.value)
           val checkIns = viewModel.getCheckIns(state.value)
           val checkOuts = viewModel.getCheckOuts(state.value)
