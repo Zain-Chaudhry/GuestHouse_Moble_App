@@ -3,6 +3,7 @@ package com.example.diamondguesthouse.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.diamondguesthouse.data.model.CustomerEntity
@@ -16,14 +17,15 @@ interface CustomerDao {
     fun getAllCustomers(): Flow<List<CustomerEntity>>
 
     // Insert customer record
-    @Insert
-    suspend fun insertCustomer(customer: CustomerEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCustomer(customer: CustomerEntity)
 
     @Delete
     suspend fun deleteCustomer(customer: CustomerEntity)
 
     @Update
     suspend fun updateCustomer(customer: CustomerEntity)
+
 
 //    // Retrieve customer by CNIC or Passport
 //    @Query("SELECT * FROM customers WHERE cnic = :cnic OR passportNo = :passportNo LIMIT 1")
