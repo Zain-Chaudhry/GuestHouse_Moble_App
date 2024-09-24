@@ -9,7 +9,7 @@ import com.example.diamondguesthouse.data.dao.RoomsDao
 import com.example.diamondguesthouse.data.model.CustomerEntity
 import com.example.diamondguesthouse.data.model.RoomEntity
 
-@Database(entities = [RoomEntity::class, CustomerEntity::class], version = 3, exportSchema = false)
+@Database(entities = [RoomEntity::class, CustomerEntity::class], version = 4, exportSchema = false)
 abstract class GuestHouseDatabase: RoomDatabase() {
     abstract fun roomDao(): RoomsDao
     abstract fun customerDao(): CustomerDao
