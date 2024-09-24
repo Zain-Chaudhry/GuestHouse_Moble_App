@@ -7,7 +7,6 @@ Welcome to the **Diamond Guest House Management App**! This application is desig
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Contact](#contact)
 
 ## Features
 
@@ -36,10 +35,4 @@ Welcome to the **Diamond Guest House Management App**! This application is desig
 2. Open the project in Android Studio.
 3. Sync the project with Gradle files.
 4. Build and run the application on an Android device or emulator.
-
-## Contact
-For questions, feedback, or collaboration inquiries, feel free to reach out:
-
-- GitHub: [Zain Chaudhry](https://github.com/Zain-Chaudhry)
-- LinkedIn: [Zain Chaudhry](www.linkedin.com/in/zain-ul-abdin-274787211)
 
