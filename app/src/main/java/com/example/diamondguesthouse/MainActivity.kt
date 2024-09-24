@@ -13,7 +13,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DiamondGuestHouseTheme {
-                AppNavigation()
+               AppNavigation()
+//                SearchRecord(rememberNavController())
 
                 }
             }
