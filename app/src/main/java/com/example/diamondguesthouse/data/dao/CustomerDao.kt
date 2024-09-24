@@ -27,9 +27,9 @@ interface CustomerDao {
     suspend fun updateCustomer(customer: CustomerEntity)
 
 
-//    // Retrieve customer by CNIC or Passport
-//    @Query("SELECT * FROM customers WHERE cnic = :cnic OR passportNo = :passportNo LIMIT 1")
-//    fun getCustomerByCnicOrPassport(cnic: String?, passportNo: String?): CustomerEntity?
+    // Retrieve customer by CNIC or Passport
+    @Query("SELECT * FROM customers WHERE cnic = :cnic OR passportNo = :passportNo LIMIT 1")
+    suspend fun getCustomerByCnicOrPassport(cnic: String?, passportNo: String?): List<CustomerEntity>
 //
 //    // Get check-ins and check-outs for today
 //    @Query("SELECT COUNT(*) FROM customers WHERE checkInDate = :today")
