@@ -7,7 +7,8 @@ import androidx.room.Relation
 
 @Entity(tableName = "rooms")
 data class RoomEntity(
-    @PrimaryKey val roomNo: String,
+    @PrimaryKey(autoGenerate = true) val roomId: Int? = null,
+    val roomNo: String,
     val roomPrice: Double,
     val checkInDate: Long,
     val checkOutDate: Long,

@@ -26,6 +26,10 @@ interface RoomsDao {
     @Query("SELECT * FROM rooms WHERE roomNo = :roomNumber")
     suspend fun getRoom(roomNumber: String): RoomEntity?
 
+    @Query("SELECT * FROM rooms WHERE roomNo = :roomNo LIMIT 1")
+    suspend fun getRoomByNumber(roomNo: String): RoomEntity?
+
+
     @Update
     suspend fun updateRoom(room: RoomEntity)
 
