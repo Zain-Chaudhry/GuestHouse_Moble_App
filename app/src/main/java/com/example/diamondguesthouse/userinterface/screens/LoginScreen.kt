@@ -1,6 +1,5 @@
 package com.example.diamondguesthouse.userinterface.screens
 
-import android.widget.ImageButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
