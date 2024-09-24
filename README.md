@@ -42,5 +42,5 @@ For questions, feedback, or collaboration inquiries, feel free to reach out:
 
 - Email: [Zain Chaudhry](zainchaudhry17302@gmail.com)
 - GitHub: [Zain Chaudhry](https://github.com/Zain-Chaudhry)
-- LinkedIn: [Zain Chaudhry](https://www.linkedin.com/in/zain-chaudhry-274787211)
+- LinkedIn: [Zain Chaudhry](www.linkedin.com/in/zain-ul-abdin-274787211)
 
