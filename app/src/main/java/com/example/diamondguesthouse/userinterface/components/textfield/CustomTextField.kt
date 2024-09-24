@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -130,6 +131,7 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     validationType: ValidationType? = null,
+    imeAction: ImeAction, // Default action is Done
     keyboardOptions: KeyboardOptions
 ) {
     var text by remember { mutableStateOf(value) }
@@ -173,13 +175,13 @@ fun CustomTextField(
         errorMessage = validate(newValue)
     }
 
-
     OutlinedTextField(
         value = text,
         onValueChange = { handleValueChange(it) },
         label = { Text(label) },
-        modifier = modifier.fillMaxWidth(),
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
+        modifier = modifier
+            .fillMaxWidth()
     )
     if (errorMessage.isNotEmpty()) {
         Text(
