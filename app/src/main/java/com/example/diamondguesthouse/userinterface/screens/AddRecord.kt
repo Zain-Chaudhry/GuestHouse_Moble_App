@@ -5,10 +5,8 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,10 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,34 +76,32 @@ fun AddRecord(navController: NavController) {
                     end.linkTo(parent.end)
                 }
             )
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 80.dp, start = 16.dp, end = 16.dp)
                     .constrainAs(nameRow) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
+                    }
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrorw_back),
                     contentDescription = null,
-                    modifier = Modifier.clickable { navController.popBackStack() }
+                    modifier = Modifier
+                        .align(Alignment.CenterStart) // Align to the start (left)
+                        .clickable { navController.popBackStack() }
                 )
+
                 Text(
                     text = "Add Record",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.ic_notification),
-                    contentDescription = null
+                    modifier = Modifier.align(Alignment.Center) // Center the text in the middle
                 )
             }
+
             Surface(
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
                 modifier = Modifier
@@ -154,7 +152,6 @@ fun AddRecord(navController: NavController) {
 
 @Composable
 fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, isLocal: Boolean = true) {
-    
     val roomNum = listOf("110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120")
     val context = LocalContext.current
 
@@ -198,6 +195,7 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
         label = "Amount Received",
         value = viewModel.roomPrice,
         onValueChange = { viewModel.roomPrice = it  },
+        imeAction = ImeAction.Next, // Define next action
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
@@ -274,7 +272,7 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
         navController.navigate("home")
 
 
-    }, modifier = Modifier.fillMaxWidth()) {
+    }, modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp)) {
         Text("Submit")
     }
     
@@ -286,12 +284,14 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
 fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntityData, recordIndex: Int) {
 
     val gender = listOf("Male", "Female")
+    remember { FocusRequester() }
 
     CustomTextField(
         label = "CNIC",
         value = customerRecord.cnic.value?: ""  ,
         onValueChange = {viewModel.customerRecords[recordIndex].cnic.value = it},
         validationType = ValidationType.CNIC,
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
@@ -299,6 +299,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
         label = "Name" ,
         value = customerRecord.name.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].name.value = it},
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
@@ -306,6 +307,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
         label = "Father's Name" ,
         value = customerRecord.fatherName.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].fatherName.value = it},
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
@@ -313,6 +315,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
         label = "Permanent Address" ,
         value = customerRecord.permanentAddress.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].permanentAddress.value = it},
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
@@ -330,6 +333,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
         value = customerRecord.cellNo.value,
         onValueChange = { viewModel.customerRecords[recordIndex].cellNo.value = it },
         validationType = ValidationType.MOBILE,
+        imeAction = ImeAction.Done,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
@@ -341,11 +345,13 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
 
 
     val gender = listOf("Male", "Female")
+    remember { FocusRequester() }
 
     CustomTextField(
         label = "Name" ,
         value = customerRecord.name.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].name.value = it},
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
@@ -353,6 +359,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
         label = "Father's Name" ,
         value = customerRecord.fatherName.value,
         onValueChange ={viewModel.customerRecords[recordIndex].fatherName.value = it},
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
     CustomTextField(
@@ -360,6 +367,8 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
         value = customerRecord.passportNo.value?: "",
         onValueChange = {viewModel.customerRecords[recordIndex].passportNo.value = it},
         validationType = ValidationType.PASSPORT,
+        imeAction = ImeAction.None,
+//
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
@@ -375,6 +384,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
         value =  customerRecord.cellNo.value,
         onValueChange = { viewModel.customerRecords[recordIndex].cellNo.value = it },
         validationType = ValidationType.MOBILE,
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
@@ -392,6 +402,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
         label = "Permanent Address" ,
         value = customerRecord.permanentAddress.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].permanentAddress.value = it},
+        imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 
@@ -399,6 +410,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
         label = "Country",
         value = customerRecord.country.value?: "",
         onValueChange = { viewModel.customerRecords[recordIndex].country.value = it },
+        imeAction = ImeAction.Done,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 

@@ -54,7 +54,7 @@ class AddRecordViewModel : ViewModel() {
                 // Create a list of CustomerEntities
                 val customerEntities = customerRecords.map { customerData ->
                     CustomerEntity(
-                        id = null,
+                        customerId = null,
                         roomNo = roomNo,
                         name = customerData.name.value,
                         fatherName = customerData.fatherName.value,
