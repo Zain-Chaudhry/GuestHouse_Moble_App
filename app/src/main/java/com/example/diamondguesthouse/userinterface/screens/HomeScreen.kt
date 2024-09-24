@@ -45,7 +45,8 @@ import com.example.diamondguesthouse.viewmodel.HomeViewModelFactory
 @Composable
 fun HomeScreen(navController: NavController) {
 
-    val viewModel: HomeViewModel = HomeViewModelFactory(LocalContext.current).create(HomeViewModel::class.java)
+    val context = LocalContext.current
+    val viewModel: HomeViewModel = HomeViewModelFactory(context).create(HomeViewModel::class.java)
 
   Surface(modifier = Modifier.fillMaxSize()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
@@ -81,7 +82,7 @@ fun HomeScreen(navController: NavController) {
                   top.linkTo(nameRow.bottom)
                   start.linkTo(parent.start)
                   end.linkTo(parent.end)
-              }, monthlyIncome, checkIns, checkOuts)
+              }, monthlyIncome, checkIns, checkOuts, navController)
           Column(modifier = Modifier.constrainAs(list){
               top.linkTo(card.bottom, margin = 30.dp)
               start.linkTo(parent.start)
@@ -91,30 +92,30 @@ fun HomeScreen(navController: NavController) {
           }) {
               Row {
                   CardButtons(
-                      title = "Add Record",
-                      image = R.drawable.ic_up_arrow,
+                      title = "New Booking",
+                      image = R.drawable.ic_add_icon,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
                       navigateTo = NavRoutes.AddRecord)
                   CardButtons(
                       title = "Search Record",
-                      image = R.drawable.ic_down_arrow,
+                      image = R.drawable.ic_search,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.Login)
+                      navigateTo = NavRoutes.SearchRecord)
               }
               Row {
-                  CardButtons(title = "Add Record",
-                      image = R.drawable.ic_up_arrow,
+                  CardButtons(title = "View Report",
+                      image = R.drawable.ic_month,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
                       navigateTo = NavRoutes.ForgotPassword)
                   CardButtons(
-                      title = "Search Record",
-                      image = R.drawable.ic_down_arrow,
+                      title = "View Booking",
+                      image = R.drawable.ic_month,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.SignUp)
+                      navigateTo = NavRoutes.ViewBooking)
               }
           }
       }
@@ -122,7 +123,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkOuts: String) {
+fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkOuts: String, navController: NavController) {
     Column(modifier = modifier
         .padding(16.dp)
         .fillMaxWidth()
@@ -156,9 +157,19 @@ fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkO
 
             Column {
                 Spacer(modifier = Modifier.size(20.dp))
-                CardRowItem(image = R.drawable.ic_down_circle_arrow, title = "Today's Check Ins", rooms = checkIns )
+                CardRowItem(
+                    image = R.drawable.ic_down_circle_arrow,
+                    title = "Today's Check Ins",
+                    rooms = checkIns,
+                    navController = navController,
+                    navigateTo = NavRoutes.ViewBooking)
                 Spacer(modifier = Modifier.size(10.dp))
-                CardRowItem(image = R.drawable.ic_up_circle_arrow, title ="Today's Check Outs", rooms = checkOuts )
+                CardRowItem(
+                    image = R.drawable.ic_up_circle_arrow,
+                    title ="Today's Check Outs",
+                    rooms = checkOuts,
+                    navController = navController,
+                    navigateTo = NavRoutes.ViewCheckOut)
             }
 
 
@@ -168,8 +179,12 @@ fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkO
 }
 
 @Composable
-fun CardRowItem(image: Int, title: String, rooms: String) {
-    Row (modifier = Modifier.fillMaxWidth(),  verticalAlignment = Alignment.CenterVertically ){
+fun CardRowItem(image: Int, title: String, rooms: String, navController: NavController, navigateTo: String) {
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { navController.navigate(navigateTo) },
+        verticalAlignment = Alignment.CenterVertically ){
         Image(painter = painterResource(id = image), contentDescription = null )
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -183,38 +198,42 @@ fun CardRowItem(image: Int, title: String, rooms: String) {
 }
 
 @Composable
-fun CardButtons(title: String, image: Int ,modifier: Modifier, navController: NavController, navigateTo: String) {
-    Column(modifier = modifier
-        .padding(16.dp)
-        .width(150.dp)
-        .height(100.dp)
-        .clip(RoundedCornerShape(16.dp))
-        .background(Zinc)
-        .padding(16.dp)
+fun CardButtons(title: String, image: Int, modifier: Modifier, navController: NavController, navigateTo: String) {
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .width(150.dp)
+            .height(100.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(Zinc)
+            .padding(16.dp)
     ) {
         Box(
             modifier = Modifier
-//                .fillMaxWidth()
                 .weight(1f)
                 .clickable { navController.navigate(navigateTo) }
+                .fillMaxSize()
         ) {
-            Column(modifier = Modifier.align(Alignment.CenterStart)) {
-                Image(painter = painterResource(id = image), contentDescription = null)
-                Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
-
-
+            Column {
+                Image(
+                    painter = painterResource(id = image),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally) // Center the image horizontally
+                        .padding(bottom = 8.dp) // Add padding as needed
+                )
+                Text(
+                    text = title,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.Start) // Align the text to the start of the Column
+                )
             }
         }
     }
 }
-
-
-
-
-
-
-
-
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
