@@ -40,7 +40,6 @@ Welcome to the **Diamond Guest House Management App**! This application is desig
 ## Contact
 For questions, feedback, or collaboration inquiries, feel free to reach out:
 
-- Email: [Zain Chaudhry](zainchaudhry17302@gmail.com)
 - GitHub: [Zain Chaudhry](https://github.com/Zain-Chaudhry)
 - LinkedIn: [Zain Chaudhry](www.linkedin.com/in/zain-ul-abdin-274787211)
 
