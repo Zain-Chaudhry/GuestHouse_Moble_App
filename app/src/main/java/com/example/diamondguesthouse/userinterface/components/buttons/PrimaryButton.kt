@@ -13,7 +13,8 @@ fun PrimaryButton(
     text: String,
     fontSize: TextUnit,
     onClick: ()-> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
