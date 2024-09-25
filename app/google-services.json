@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8500143231",
+    "project_id": "diamond-guest-house",
+    "storage_bucket": "diamond-guest-house.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8500143231:android:cdeaaef1c5d2f2bc554b4a",
+        "android_client_info": {
+          "package_name": "com.example.diamondguesthouse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDww-piRQq3tbG3hk3f0QmvbObZ3XhVVfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
