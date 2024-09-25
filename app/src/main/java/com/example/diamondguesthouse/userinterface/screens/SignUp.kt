@@ -1,5 +1,6 @@
 package com.example.diamondguesthouse.userinterface.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,9 +23,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,9 +48,28 @@ import com.example.diamondguesthouse.userinterface.components.buttons.PrimaryTex
 import com.example.diamondguesthouse.userinterface.components.textfield.EmailTextField
 import com.example.diamondguesthouse.userinterface.components.textfield.NameTextField
 import com.example.diamondguesthouse.userinterface.components.textfield.PasswordTextField
+import com.example.diamondguesthouse.viewmodel.AuthState
+import com.example.diamondguesthouse.viewmodel.AuthViewModel
 
 @Composable
-fun SignUp(navController: NavController) {
+fun SignUp(authViewModel: AuthViewModel, navController: NavController) {
+
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val authState = authViewModel.authState.observeAsState()
+
+    LaunchedEffect(authState.value) {
+        when(authState.value){
+            is AuthState.Authenticated -> navController.navigate(NavRoutes.HOME){ popUpTo(0) { inclusive = true }}
+            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,6 +116,8 @@ fun SignUp(navController: NavController) {
                     Spacer(modifier = Modifier.height(14.dp))
 
                     NameTextField(
+                        value = name,
+                        onValueChange = {name = it},
                         label = "Enter Name",
                         leadingIcon = Icons.Default.Person,
                         modifier = Modifier.fillMaxWidth())
@@ -96,6 +125,8 @@ fun SignUp(navController: NavController) {
                     Spacer(modifier = Modifier.height(14.dp))
 
                     EmailTextField(
+                        value = email,
+                        onValueChange = {email = it},
                         label = "Enter Email",
                         leadingIcon = Icons.Default.Email,
                         modifier = Modifier.fillMaxWidth())
@@ -103,6 +134,8 @@ fun SignUp(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     PasswordTextField(
+                        value = password,
+                        onValueChange = {password = it},
                         label = "Enter Password",
                         leadingIcon = Icons.Default.Lock,
                         Modifier.fillMaxWidth())
@@ -110,6 +143,8 @@ fun SignUp(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     PasswordTextField(
+                        value = confirmPassword,
+                        onValueChange = {confirmPassword = it},
                         label = "Confim Password",
                         leadingIcon = Icons.Default.Lock,
                         Modifier.fillMaxWidth())
@@ -120,10 +155,13 @@ fun SignUp(navController: NavController) {
                     PrimaryButton(
                         text = "Sign Up",
                         fontSize = 18.sp,
-                        onClick = { navController.navigate(NavRoutes.Home) },
+                        onClick = { authViewModel.signUp(email = email, password = password, name = name) },
+
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp))
+                            .height(48.dp),
+                        enabled = authState.value!= AuthState.Loading
+                    )
 
                     Spacer(modifier = Modifier.height(29.dp))
 
@@ -164,7 +202,7 @@ fun SignUp(navController: NavController) {
                         contentDescription = "Login with google",
                         modifier = Modifier
                             .size(42.dp)
-                            .clickable { navController.navigate(NavRoutes.Home) })
+                            .clickable { navController.navigate(NavRoutes.HOME) })
 
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -178,7 +216,7 @@ fun SignUp(navController: NavController) {
                         PrimaryTextButton(
                             text = "Log In",
                             fontSize = 16.sp,
-                            onClick = { navController.navigate(NavRoutes.Login) })
+                            onClick = { navController.navigate(NavRoutes.LOGIN) })
 
 
                     }
@@ -192,6 +230,6 @@ fun SignUp(navController: NavController) {
 @Composable
 fun SignUpPreview(){
     DiamondGuestHouseTheme {
-        SignUp(rememberNavController())
+        SignUp(authViewModel = AuthViewModel(), navController = rememberNavController())
     }
 }

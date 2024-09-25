@@ -96,26 +96,26 @@ fun HomeScreen(navController: NavController) {
                       image = R.drawable.ic_add_icon,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.AddRecord)
+                      navigateTo = NavRoutes.ADD_RECORD)
                   CardButtons(
                       title = "Search Record",
                       image = R.drawable.ic_search,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.SearchRecord)
+                      navigateTo = NavRoutes.SEARCH_RECORD)
               }
               Row {
                   CardButtons(title = "View Report",
                       image = R.drawable.ic_month,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.ForgotPassword)
+                      navigateTo = NavRoutes.FORGOT_PASSWORD)
                   CardButtons(
                       title = "View Booking",
                       image = R.drawable.ic_month,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.ViewBooking)
+                      navigateTo = NavRoutes.VIEW_BOOKING)
               }
           }
       }
@@ -148,7 +148,7 @@ fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkO
                     fontWeight = FontWeight.Bold)
             }
             Image(painter = painterResource(id = R.drawable.ic_dot_menue), contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterEnd))
+                modifier = Modifier.align(Alignment.CenterEnd).clickable { navController. navigate(NavRoutes.SETTING_SCREEN) } )
         }
 
         Box(modifier = Modifier
@@ -162,14 +162,14 @@ fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkO
                     title = "Today's Check Ins",
                     rooms = checkIns,
                     navController = navController,
-                    navigateTo = NavRoutes.ViewBooking)
+                    navigateTo = NavRoutes.VIEW_BOOKING)
                 Spacer(modifier = Modifier.size(10.dp))
                 CardRowItem(
                     image = R.drawable.ic_up_circle_arrow,
                     title ="Today's Check Outs",
                     rooms = checkOuts,
                     navController = navController,
-                    navigateTo = NavRoutes.ViewCheckOut)
+                    navigateTo = NavRoutes.VIEW_CHECKOUT)
             }
 
 
