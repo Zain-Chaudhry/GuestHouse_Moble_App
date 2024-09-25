@@ -42,15 +42,17 @@ import java.util.Locale
 @Composable
 fun EmailTextField(
 
+    value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     leadingIcon: ImageVector,
     modifier: Modifier = Modifier
 ) {
-    var email by remember { mutableStateOf("") }
+
 
     OutlinedTextField(
-        value = email ,
-        onValueChange = {email = it},
+        value = value ,
+        onValueChange = onValueChange,
         shape = RoundedCornerShape(32.dp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         label = { Text(text = label, color = MaterialTheme.colorScheme.onBackground) },
@@ -61,17 +63,18 @@ fun EmailTextField(
 
 @Composable
 fun PasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     leadingIcon: ImageVector,
     modifier: Modifier = Modifier
 ) {
-    var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
     val passwordVisualTransformation = remember { PasswordVisualTransformation() }
 
     OutlinedTextField(
-        value = password ,
-        onValueChange = { password = it},
+        value = value,
+        onValueChange = onValueChange,
         shape = RoundedCornerShape( 32.dp) ,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         label = { Text(text = label, color = MaterialTheme.colorScheme.onBackground) },
@@ -99,15 +102,16 @@ fun PasswordTextField(
 @Composable
 fun NameTextField(
 
+    value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     leadingIcon: ImageVector,
     modifier: Modifier = Modifier
 ) {
-    var name by remember { mutableStateOf("") }
 
     OutlinedTextField(
-        value = name ,
-        onValueChange = {name = it},
+        value = value ,
+        onValueChange = onValueChange,
         shape = RoundedCornerShape(32.dp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         label = { Text(text = label, color = MaterialTheme.colorScheme.onBackground) },
