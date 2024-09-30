@@ -1,21 +1,26 @@
 package com.example.diamondguesthouse.viewmodel
 
-import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.diamondguesthouse.data.dao.CustomerDao
 import com.example.diamondguesthouse.data.dao.RoomsDao
 import com.example.diamondguesthouse.data.model.CustomerEntity
 import com.example.diamondguesthouse.data.model.RoomEntity
 import kotlinx.coroutines.launch
 
 class AddRecordViewModel : ViewModel() {
+
+    // for customer status check
+    private val _customerStatus = MutableLiveData<CustomerStatus>()
+    val customerStatus: LiveData<CustomerStatus> = _customerStatus
 
     // Room data
     var roomNo: String by mutableStateOf("Please Select")
@@ -24,6 +29,7 @@ class AddRecordViewModel : ViewModel() {
     var checkOutDate: Long by mutableLongStateOf(0L)
     var checkInTime: Long by mutableLongStateOf(System.currentTimeMillis())
     var checkOutTime: Long by mutableLongStateOf(0L)
+
     // List of customer records
     var customerRecords = mutableStateListOf<CustomerEntityData>()
 
@@ -35,13 +41,53 @@ class AddRecordViewModel : ViewModel() {
     // Remove a customer record by index
     fun removeCustomerRecord(index: Int) {
         if (index >= 0 && index < customerRecords.size) {
-                customerRecords.removeAt(index)
+            customerRecords.removeAt(index)
         }
     }
 
-    fun submitRecord(roomDao: RoomsDao) {
+    private fun validateCustomerData(): Boolean {
+        return customerRecords.all { customer ->
+            customer.name.value.isNotBlank() &&
+            customer.cellNo.value.isNotBlank() &&
+            customer.selectedGender.value.isNotBlank() &&
+            customer.permanentAddress.value.isNotBlank() &&
+            customer.fatherName.value.isNotBlank()
+        }
+    }
+
+    private fun validateRoomData(): Boolean {
+        return roomNo.isNotBlank() && roomPrice.isNotBlank() && checkInDate > 0 && checkOutDate > 0 && checkInTime > 0 && checkOutTime > 0
+    }
+
+    fun submitRecord(roomDao: RoomsDao, customerDao: CustomerDao) {
+
+
+        _customerStatus.value = CustomerStatus.Loading
         viewModelScope.launch {
-            try {
+
+            if (!validateRoomData()) {
+                _customerStatus.value = CustomerStatus.Error("Incomplete room details")
+                return@launch
+            }
+
+            if (!validateCustomerData()) {
+                _customerStatus.value = CustomerStatus.Error("Incomplete customer data")
+                return@launch
+            }
+            var existingCustomer: CustomerEntity? = null
+            for (customer in customerRecords) {
+               existingCustomer = customerDao.findActiveCustomerByCnicOrPassport(
+                    customer.cnic.value,
+                    customer.passportNo.value,
+                    System.currentTimeMillis()
+                )
+            }
+            if (existingCustomer != null) {
+                _customerStatus.value =
+                    CustomerStatus.AlreadyCheckedIn("Customer is already checked in")
+                return@launch
+            } else {
+                _customerStatus.value = CustomerStatus.NewCustomer
                 val roomEntity = RoomEntity(
                     roomNo = roomNo,
                     roomPrice = roomPrice.toDouble(),
@@ -65,27 +111,37 @@ class AddRecordViewModel : ViewModel() {
                         country = customerData.country.value,
                         passportNo = customerData.passportNo.value,
                         visaUpTill = customerData.visaUpTill.value,
-                        checkInDate = customerData.checkInDate.value,
-                        checkOutDate = customerData.checkOutDate.value,
-                        checkInTime = customerData.checkInTime.value,
-                        checkOutTime = customerData.checkOutTime.value
+                        checkInDate = checkInDate,
+                        checkOutDate = checkOutDate,
+                        checkInTime = checkInTime,
+                        checkOutTime = checkOutTime
                     )
                 }
 
                 // Insert both room and customers in one transaction
                 roomDao.insertRoomWithCustomers(roomEntity, customerEntities)
+                _customerStatus.value = CustomerStatus.CustomerAdded("Customer added successfully")
 
-            } catch (e: Exception) {
-                // Handle the exception (e.g., show a Toast or log the error)
-                e.printStackTrace()
+
             }
         }
     }
+
+    fun resetCustomerStatus() {
+        _customerStatus.value = CustomerStatus.Loading
+    }
+
 }
 
+sealed class CustomerStatus {
+    data object Loading : CustomerStatus()
+    data class AlreadyCheckedIn(val message: String) : CustomerStatus()
+    data object NewCustomer : CustomerStatus()
+    data class CustomerAdded(val message: String) : CustomerStatus()
+    data class Error(val message: String) : CustomerStatus()
+}
 
 data class CustomerEntityData(
-
     var name: MutableState<String> = mutableStateOf(""),
     var fatherName: MutableState<String> = mutableStateOf(""),
     var cellNo: MutableState<String> = mutableStateOf(""),
@@ -94,22 +150,5 @@ data class CustomerEntityData(
     var selectedGender: MutableState<String> = mutableStateOf("Please Select"),
     var country: MutableState<String?> = mutableStateOf(""),
     var passportNo: MutableState<String?> = mutableStateOf(null),
-    var checkInDate: MutableState<Long> = mutableLongStateOf(0L),
-    var checkOutDate: MutableState<Long> = mutableLongStateOf(0L),
-    var checkInTime: MutableState<Long> = mutableLongStateOf(0L),
-    var checkOutTime: MutableState<Long> = mutableLongStateOf(0L),
     var visaUpTill: MutableState<Long?> = mutableStateOf(0L)
 )
-
-
-class AddRecordViewModelFactory(current: Context) : ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddRecordViewModel::class.java)) {
-//            val dao = GuestHouseDatabase.getDatabase(context).customerDao()
-            @Suppress("UNCHECKED_CAST")
-            return AddRecordViewModel() as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-
-    }
-}

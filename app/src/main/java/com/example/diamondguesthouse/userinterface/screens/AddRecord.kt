@@ -1,6 +1,7 @@
 package com.example.diamondguesthouse.userinterface.screens
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,6 +26,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +47,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.diamondguesthouse.NavRoutes
 import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.data.GuestHouseDatabase
 import com.example.diamondguesthouse.ui.theme.DiamondGuestHouseTheme
@@ -52,16 +56,36 @@ import com.example.diamondguesthouse.userinterface.components.textfield.CustomTe
 import com.example.diamondguesthouse.userinterface.components.textfield.TimeField
 import com.example.diamondguesthouse.userinterface.components.textfield.ValidationType
 import com.example.diamondguesthouse.viewmodel.AddRecordViewModel
-import com.example.diamondguesthouse.viewmodel.AddRecordViewModelFactory
 import com.example.diamondguesthouse.viewmodel.CustomerEntityData
+import com.example.diamondguesthouse.viewmodel.CustomerStatus
 
 @Composable
-fun AddRecord(navController: NavController) {
+fun AddRecord(viewModel: AddRecordViewModel, navController: NavController) {
 
     val context = LocalContext.current
-    val viewModel: AddRecordViewModel = AddRecordViewModelFactory(context).create(
-        AddRecordViewModel::class.java)
     val selectedTab = remember { mutableIntStateOf(0) }
+
+    val customerStatus = viewModel.customerStatus.observeAsState()
+
+    LaunchedEffect(customerStatus.value) {
+        val status = customerStatus.value
+        Log.d("AddRecord", "Customer Status: $status")
+        when(customerStatus.value) {
+            is CustomerStatus.AlreadyCheckedIn -> Toast.makeText(context, (status as CustomerStatus.AlreadyCheckedIn).message, Toast.LENGTH_SHORT).show()
+            is CustomerStatus.Error -> Toast.makeText(
+                context,
+                (status as CustomerStatus.Error).message,
+                Toast.LENGTH_SHORT
+            ).show()
+            is CustomerStatus.CustomerAdded -> {
+                Toast.makeText(context, (status as CustomerStatus.CustomerAdded).message, Toast.LENGTH_SHORT).show()
+                navController.navigate(NavRoutes.HOME){popUpTo(0){inclusive = true} }
+                viewModel.resetCustomerStatus()
+            }
+            else -> Unit
+        }
+
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
@@ -138,9 +162,9 @@ fun AddRecord(navController: NavController) {
                     ) {
                         item {
                             if (selectedTab.intValue == 0) {
-                                CustomerForm(navController = navController, viewModel = viewModel, isLocal = true)
+                                CustomerForm(viewModel = viewModel, isLocal = true)
                             } else{
-                                CustomerForm(navController = navController, viewModel = viewModel, isLocal = false)
+                                CustomerForm(viewModel = viewModel, isLocal = false)
                             }
                         }
                     }
@@ -151,7 +175,7 @@ fun AddRecord(navController: NavController) {
 }
 
 @Composable
-fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, isLocal: Boolean = true) {
+fun CustomerForm(viewModel: AddRecordViewModel, isLocal: Boolean = true) {
     val roomNum = listOf("110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120")
     val context = LocalContext.current
 
@@ -200,13 +224,15 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
     )
 
     if(isLocal) {
+
         Image(
             painter = painterResource(id = R.drawable.ic_add_person),
             contentDescription = null,
-            modifier = Modifier.clickable {
-                viewModel.addCustomerRecord()
+            modifier = Modifier
+                .clickable {
+                    viewModel.addCustomerRecord()
 
-            }
+                }
                 .padding(vertical = 10.dp)
 
         )
@@ -222,9 +248,10 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
             Image(
                 painter = painterResource(id = R.drawable.ic_remove_person),
                 contentDescription = null,
-                modifier = Modifier.clickable {
-                    viewModel.removeCustomerRecord(viewModel.customerRecords.size - 1)
-                }
+                modifier = Modifier
+                    .clickable {
+                        viewModel.removeCustomerRecord(viewModel.customerRecords.size - 1)
+                    }
                     .padding(vertical = 10.dp)
 
             )
@@ -233,10 +260,11 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
         Image(
             painter = painterResource(id = R.drawable.ic_add_person),
             contentDescription = null,
-            modifier = Modifier.clickable {
-                viewModel.addCustomerRecord()
+            modifier = Modifier
+                .clickable {
+                    viewModel.addCustomerRecord()
 
-            }
+                }
                 .padding(vertical = 10.dp)
 
         )
@@ -252,9 +280,10 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
             Image(
                 painter = painterResource(id = R.drawable.ic_remove_person),
                 contentDescription = null,
-                modifier = Modifier.clickable {
-                    viewModel.removeCustomerRecord(viewModel.customerRecords.size - 1)
-                }
+                modifier = Modifier
+                    .clickable {
+                        viewModel.removeCustomerRecord(viewModel.customerRecords.size - 1)
+                    }
                     .padding(vertical = 10.dp)
 
             )
@@ -265,14 +294,15 @@ fun CustomerForm(navController: NavController, viewModel: AddRecordViewModel, is
     // Submit button
     Button(onClick = {
         viewModel.submitRecord(
-            roomDao = GuestHouseDatabase.getDatabase(context).roomDao()
+            roomDao = GuestHouseDatabase.getDatabase(context).roomDao(),
+            customerDao = GuestHouseDatabase.getDatabase(context).customerDao()
         )
 
-        Toast.makeText(context, "Record Added", Toast.LENGTH_SHORT).show()
-        navController.navigate("home")
 
 
-    }, modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp)) {
+    }, modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 30.dp)) {
         Text("Submit")
     }
     
@@ -475,7 +505,7 @@ fun CustomDropdown(
 fun AddRecordPreview() {
 
     DiamondGuestHouseTheme(isSystemInDarkTheme()){
-        AddRecord(rememberNavController())
+        AddRecord(viewModel = AddRecordViewModel(), navController = rememberNavController())
     }
 }
 
