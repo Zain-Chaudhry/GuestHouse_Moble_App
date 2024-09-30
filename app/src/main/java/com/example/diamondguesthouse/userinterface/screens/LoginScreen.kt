@@ -191,7 +191,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavController) {
                         contentDescription = "Login with google",
                         modifier = Modifier
                             .size(42.dp)
-                            .clickable { navController.navigate(NavRoutes.HOME) })
+                            .clickable { authViewModel.handleGoogleSignIn(context)})
 
                     Spacer(modifier = Modifier.height(20.dp))
 

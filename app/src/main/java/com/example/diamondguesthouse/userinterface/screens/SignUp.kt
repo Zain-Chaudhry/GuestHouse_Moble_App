@@ -199,10 +199,10 @@ fun SignUp(authViewModel: AuthViewModel, navController: NavController) {
 
                     Image(
                         painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Login with google",
+                        contentDescription = "SignUp with google",
                         modifier = Modifier
                             .size(42.dp)
-                            .clickable { navController.navigate(NavRoutes.HOME) })
+                            .clickable { authViewModel.handleGoogleSignIn(context) })
 
                     Spacer(modifier = Modifier.height(20.dp))
 
