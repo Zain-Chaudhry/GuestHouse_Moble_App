@@ -27,6 +27,8 @@ interface CustomerDao {
     suspend fun updateCustomer(customer: CustomerEntity)
 
 
+    @Query("SELECT * FROM Customers WHERE (cnic = :cnic OR passportNo = :passportNo) AND checkOutTime > :currentTime LIMIT 1")
+    suspend fun findActiveCustomerByCnicOrPassport(cnic: String?, passportNo: String?, currentTime: Long): CustomerEntity?
     // Retrieve customer by CNIC or Passport
     @Query("SELECT * FROM customers WHERE cnic = :cnic OR passportNo = :passportNo LIMIT 1")
     suspend fun getCustomerByCnicOrPassport(cnic: String?, passportNo: String?): List<CustomerEntity>
