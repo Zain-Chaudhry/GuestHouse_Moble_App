@@ -42,8 +42,11 @@ interface RoomsDao {
         insertCustomers(customers)
     }
 
+    @Query("SELECT COUNT(*) FROM rooms WHERE checkInDate BETWEEN :startDate AND :endDate")
+    suspend fun getCountOfRoomsBookedBetween(startDate: Long, endDate: Long): Int
 
-
+    @Query("SELECT SUM(roomPrice) FROM rooms WHERE checkInDate BETWEEN :startDate AND :endDate")
+    suspend fun getTotalIncomeBetweenDates(startDate: Long, endDate: Long): Double?
 
     @Query("SELECT * FROM rooms WHERE roomNo = :roomNo")
     suspend fun getRoomWithCustomers(roomNo: String): RoomWithCustomers
