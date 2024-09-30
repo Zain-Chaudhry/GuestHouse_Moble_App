@@ -9,13 +9,13 @@ import com.example.diamondguesthouse.data.dao.RoomsDao
 import com.example.diamondguesthouse.data.model.CustomerEntity
 import com.example.diamondguesthouse.data.model.RoomEntity
 
-@Database(entities = [RoomEntity::class, CustomerEntity::class], version = 4, exportSchema = false)
+@Database(entities = [RoomEntity::class, CustomerEntity::class], version = 5, exportSchema = false)
 abstract class GuestHouseDatabase: RoomDatabase() {
     abstract fun roomDao(): RoomsDao
     abstract fun customerDao(): CustomerDao
 
     companion object {
-        const val DATABASE_NAME = "guestHouse_database"
+        private const val DATABASE_NAME = "guestHouse_database"
 
         @Volatile
         private var INSTANCE: GuestHouseDatabase? = null
