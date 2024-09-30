@@ -5,3 +5,9 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.google.gms.google.services) apply false
 }
+
+buildscript {
+    dependencies {
+        classpath (libs.gradle)
+    }
+}
