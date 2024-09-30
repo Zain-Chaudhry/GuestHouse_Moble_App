@@ -109,7 +109,7 @@ fun HomeScreen(navController: NavController) {
                       image = R.drawable.ic_month,
                       modifier = Modifier.align(Alignment.Top),
                       navController = navController,
-                      navigateTo = NavRoutes.FORGOT_PASSWORD)
+                      navigateTo = NavRoutes.REPORT_SCREEN)
                   CardButtons(
                       title = "View Booking",
                       image = R.drawable.ic_month,
@@ -147,7 +147,7 @@ fun CardItem(modifier: Modifier, monthlyIncome: String, checkIns: String, checkO
                     color = Color.White,
                     fontWeight = FontWeight.Bold)
             }
-            Image(painter = painterResource(id = R.drawable.ic_dot_menue), contentDescription = null,
+            Image(painter = painterResource(id = R.drawable.ic_settings), contentDescription = null,
                 modifier = Modifier.align(Alignment.CenterEnd).clickable { navController. navigate(NavRoutes.SETTING_SCREEN) } )
         }
 
