@@ -1,6 +1,7 @@
 
 [versions]
 agp = "8.5.2"
+coreSplashscreen = "1.0.1"
 gradle = "8.5.2"
 graphicsCore = "1.0.1"
 graphicsPath = "1.0.1"
@@ -28,6 +29,7 @@ googleid = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-graphics-core = { module = "androidx.graphics:graphics-core", version.ref = "graphicsCore" }
 androidx-graphics-path = { module = "androidx.graphics:graphics-path", version.ref = "graphicsPath" }
 androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsCore" }
