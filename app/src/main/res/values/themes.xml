@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.DiamondGuestHouse" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.app.starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FF2F7E79</item>
+        <item name="postSplashScreenTheme">@style/Theme.DiamondGuestHouse</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+    </style>
+
+
 </resources>
