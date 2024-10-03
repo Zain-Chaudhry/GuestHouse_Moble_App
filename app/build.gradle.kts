@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.androidx.graphics.core)
     implementation(libs.androidx.graphics.path)
     implementation(libs.androidx.graphics.shapes)
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
