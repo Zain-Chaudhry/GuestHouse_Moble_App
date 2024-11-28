@@ -60,7 +60,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.auth)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.googleid)
+    implementation(libs.firebase.messaging.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)

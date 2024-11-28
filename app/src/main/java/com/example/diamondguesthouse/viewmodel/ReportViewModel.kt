@@ -8,9 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.diamondguesthouse.data.GuestHouseDatabase
 import com.example.diamondguesthouse.data.dao.RoomsDao
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -30,7 +30,7 @@ class ReportViewModel (
     // Function to fetch reports based on the selected type
     fun fetchReport() {
         // Launch a coroutine to fetch report data
-        CoroutineScope(Dispatchers.IO).launch {
+       viewModelScope.launch(Dispatchers.IO){
             val today = LocalDate.now()
             when (reportType) {
                 "Daily Report" -> {

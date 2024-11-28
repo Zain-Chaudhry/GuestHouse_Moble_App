@@ -54,9 +54,8 @@ class SearchRecordViewModel : ViewModel() {
     }
 
     fun searchCustomer(customerDao: CustomerDao) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                try {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
                     // Fetch the list of customers from the DAO
                     val results = customerDao.getCustomerByCnicOrPassport(cnic.ifBlank { null }, passportNo.ifBlank { null })
                     withContext(Dispatchers.Main) {
@@ -69,11 +68,10 @@ class SearchRecordViewModel : ViewModel() {
                             errorMessage = "No customers found"
                         }
                     }
-                } catch (e: Exception) {
+            } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         errorMessage = "Error occurred: ${e.message}"
                     }
-                }
             }
         }
     }
@@ -132,13 +130,13 @@ class SearchRecordViewModel : ViewModel() {
     }
 
 
-    // Reset the search fields and results
-    fun resetSearch() {
-        cnic = ""
-        passportNo = ""
-        searchResults.clear()
-        errorMessage = ""
-    }
+//    // Reset the search fields and results
+//    fun resetSearch() {
+//        cnic = ""
+//        passportNo = ""
+//        searchResults.clear()
+//        errorMessage = ""
+//    }
 }
 
 

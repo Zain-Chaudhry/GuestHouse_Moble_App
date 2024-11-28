@@ -12,7 +12,20 @@
           "package_name": "com.example.diamondguesthouse"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "8500143231-55i1p7omkk0a7o9tbt4ve4pk9hlj475j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.diamondguesthouse",
+            "certificate_hash": "81bd364528615d176aeb27eeaeb0ff251f12a01c"
+          }
+        },
+        {
+          "client_id": "8500143231-smnr1sa7c9fvturgk8rpacv0npd14ut6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDww-piRQq3tbG3hk3f0QmvbObZ3XhVVfs"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8500143231-smnr1sa7c9fvturgk8rpacv0npd14ut6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

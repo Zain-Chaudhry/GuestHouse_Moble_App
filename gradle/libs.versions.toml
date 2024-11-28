@@ -1,31 +1,31 @@
 
 [versions]
-agp = "8.5.2"
+agp = "8.7.2"
 coreSplashscreen = "1.0.1"
-gradle = "8.5.2"
-graphicsCore = "1.0.1"
+firebaseBom = "33.6.0"
+gradle = "8.7.2"
+graphicsCore = "1.0.2"
 graphicsPath = "1.0.1"
 kotlin = "2.0.0"
-coreKtx = "1.13.1"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.6"
-activityCompose = "1.9.2"
-composeBom = "2024.09.02"
-benchmarkMacro = "1.3.1"
-constraintlayoutCompose = "1.0.1"
-navigationCompose = "2.8.1"
-graphicsShapesAndroid = "1.0.1"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.9.3"
+composeBom = "2024.11.00"
+benchmarkMacro = "1.3.3"
+constraintlayoutCompose = "1.1.0"
+navigationCompose = "2.8.4"
 roomCompiler = "2.6.1"
-roomCompilerVersion = "2.6.1"
 roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
-lifecycleLivedataKtx = "2.8.6"
-runtimeLivedata = "1.7.2"
+lifecycleLivedataKtx = "2.8.7"
+runtimeLivedata = "1.7.5"
 googleGmsGoogleServices = "4.4.2"
-firebaseAuth = "23.0.0"
+firebaseAuth = "23.1.0"
 googleid = "1.1.1"
+firebaseMessagingKtx = "24.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,10 +37,9 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 #noinspection SimilarGradleDependency
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
-#noinspection SimilarGradleDependency
-androidx-room-compiler-v250 = { module = "androidx.room:room-compiler", version.ref = "roomCompilerVersion" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -57,11 +56,11 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro", version.ref = "benchmarkMacro" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayoutCompose" }
-androidx-graphics-shapes-android = { group = "androidx.graphics", name = "graphics-shapes-android", version.ref = "graphicsShapesAndroid" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
