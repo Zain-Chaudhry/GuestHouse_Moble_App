@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.diamondguesthouse"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.diamondguesthouse"
@@ -82,7 +82,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.graphics.core)
     implementation(libs.androidx.graphics.path)
-    implementation(libs.androidx.graphics.shapes)
+    implementation (libs.androidx.graphics.shapes)
+//    implementation(libs.androidx.graphics.shapes)
     implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

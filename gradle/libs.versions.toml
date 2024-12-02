@@ -6,6 +6,7 @@ firebaseBom = "33.6.0"
 gradle = "8.7.2"
 graphicsCore = "1.0.2"
 graphicsPath = "1.0.1"
+graphicsShapes = "1.0.1"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -32,7 +33,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-graphics-core = { module = "androidx.graphics:graphics-core", version.ref = "graphicsCore" }
 androidx-graphics-path = { module = "androidx.graphics:graphics-path", version.ref = "graphicsPath" }
-androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsCore" }
+androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 #noinspection SimilarGradleDependency
