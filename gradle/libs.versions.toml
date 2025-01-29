@@ -1,9 +1,10 @@
 
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 coreSplashscreen = "1.0.1"
-firebaseBom = "33.6.0"
-gradle = "8.7.2"
+credentials = "1.5.0-rc01"
+firebaseBom = "33.8.0"
+gradle = "8.7.3"
 graphicsCore = "1.0.2"
 graphicsPath = "1.0.1"
 graphicsShapes = "1.0.1"
@@ -13,16 +14,16 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.11.00"
+activityCompose = "1.10.0"
+composeBom = "2025.01.00"
 benchmarkMacro = "1.3.3"
 constraintlayoutCompose = "1.1.0"
-navigationCompose = "2.8.4"
+navigationCompose = "2.8.5"
 roomCompiler = "2.6.1"
 roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
 lifecycleLivedataKtx = "2.8.7"
-runtimeLivedata = "1.7.5"
+runtimeLivedata = "1.7.6"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.1.0"
 googleid = "1.1.1"
@@ -31,12 +32,13 @@ firebaseMessagingKtx = "24.1.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-graphics-core = { module = "androidx.graphics:graphics-core", version.ref = "graphicsCore" }
 androidx-graphics-path = { module = "androidx.graphics:graphics-path", version.ref = "graphicsPath" }
 androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-#noinspection SimilarGradleDependency
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }

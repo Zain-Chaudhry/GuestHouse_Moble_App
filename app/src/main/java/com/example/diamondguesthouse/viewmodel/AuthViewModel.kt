@@ -132,14 +132,14 @@ class AuthViewModel: ViewModel() {
         }
     }
 
-    private suspend fun signInWithGoogle(context: Context): Flow<Result<AuthResult>> {
+    private fun signInWithGoogle(context: Context): Flow<Result<AuthResult>> {
 
         return callbackFlow {
 
             try {
 
                 // credential manager initialized
-                val credentialManager: CredentialManager = CredentialManager.create(context)
+                val credentialManager = CredentialManager.create(context)
 
                 // Nonce generation
                 val ranNonce: String = UUID.randomUUID().toString()

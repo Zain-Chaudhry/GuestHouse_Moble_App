@@ -1,8 +1,7 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.gms.google.services)
 }
@@ -63,9 +62,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.googleid)
     implementation(libs.firebase.messaging.ktx)
-    annotationProcessor(libs.androidx.room.compiler)
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
@@ -78,11 +75,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.benchmark.macro)
     implementation(libs.androidx.constraintlayout.compose)
-    implementation (libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.graphics.core)
     implementation(libs.androidx.graphics.path)
-    implementation (libs.androidx.graphics.shapes)
+    implementation(libs.androidx.graphics.shapes)
 //    implementation(libs.androidx.graphics.shapes)
     implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
@@ -92,4 +89,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    implementation(libs.androidx.credentials)
+    //for Android 13 and below
+    implementation(libs.androidx.credentials.play.services.auth)
 }

@@ -54,7 +54,5 @@ fun AppNavigation() {
         composable(NavRoutes.VIEW_CHECKOUT) { ViewCheckOuts( navController = navController) }
         composable(NavRoutes.SETTING_SCREEN) { SettingScreen(authViewModel, navController) }
         composable(NavRoutes.REPORT_SCREEN) { ReportScreen(navController) }
-
-
     }
 }
