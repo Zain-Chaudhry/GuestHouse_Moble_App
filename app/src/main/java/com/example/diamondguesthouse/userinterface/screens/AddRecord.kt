@@ -1,5 +1,4 @@
 package com.example.diamondguesthouse.userinterface.screens
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
@@ -27,6 +26,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -65,12 +66,12 @@ fun AddRecord(viewModel: AddRecordViewModel, navController: NavController) {
     val context = LocalContext.current
     val selectedTab = remember { mutableIntStateOf(0) }
 
-    val customerStatus = viewModel.customerStatus.observeAsState()
+    val customerStatus by viewModel.customerStatus.observeAsState()
 
-    LaunchedEffect(customerStatus.value) {
-        val status = customerStatus.value
+    LaunchedEffect(customerStatus) {
+        val status = customerStatus
         Log.d("AddRecord", "Customer Status: $status")
-        when(customerStatus.value) {
+        when(customerStatus) {
             is CustomerStatus.AlreadyCheckedIn -> Toast.makeText(context, (status as CustomerStatus.AlreadyCheckedIn).message, Toast.LENGTH_SHORT).show()
             is CustomerStatus.Error -> Toast.makeText(
                 context,
@@ -118,7 +119,7 @@ fun AddRecord(viewModel: AddRecordViewModel, navController: NavController) {
                 )
 
                 Text(
-                    text = "Add Record",
+                    text = stringResource(R.string.add_record),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -147,12 +148,12 @@ fun AddRecord(viewModel: AddRecordViewModel, navController: NavController) {
                         Tab(
                             selected = selectedTab.intValue == 0,
                             onClick = { selectedTab.intValue = 0 },
-                            text = { Text("Local") }
+                            text = { Text(stringResource(R.string.local)) }
                         )
                         Tab(
                             selected = selectedTab.intValue == 1,
                             onClick = { selectedTab.intValue = 1 },
-                            text = { Text("Foreigner") }
+                            text = { Text(stringResource(R.string.foreigner)) }
                         )
                     }
                     LazyColumn(
@@ -181,42 +182,42 @@ fun CustomerForm(viewModel: AddRecordViewModel, isLocal: Boolean = true) {
 
     CustomDropdown(
         value = viewModel.roomNo,
-        label = "Room No.",
+        label = stringResource(R.string.room_no),
         list = roomNum,
         onSelectedChange = {newRoom ->
             viewModel.roomNo = newRoom},
         isAvailable = true
     )
     CustomDateField(
-        label = "Check in Date",
+        label = stringResource(R.string.check_in_date),
         value = viewModel.checkInDate,
         onDateSelected = {},
         isClickable = false
     )
 
     TimeField(
-        label = "Check In Time",
+        label = stringResource(R.string.check_in_time),
         value = viewModel.checkInTime,
         onTimeSelected = {},
         isClickable = false
     )
 
     CustomDateField(
-        label = "Check Out Date",
+        label = stringResource(R.string.check_out_date),
         value = viewModel.checkOutDate,
         onDateSelected = {viewModel.checkOutDate = it},
         isClickable = true
     )
 
     TimeField(
-        label = "Check Out Time",
+        label = stringResource(R.string.check_out_time),
         value = viewModel.checkOutTime,
         onTimeSelected = {viewModel.checkOutTime = it},
         isClickable = true
     )
     
     CustomTextField(
-        label = "Amount Received",
+        label = stringResource(R.string.amount_received),
         value = viewModel.roomPrice,
         onValueChange = { viewModel.roomPrice = it  },
         imeAction = ImeAction.Next, // Define next action
@@ -309,7 +310,6 @@ fun CustomerForm(viewModel: AddRecordViewModel, isLocal: Boolean = true) {
 }
 
 
-@SuppressLint("AutoboxingStateCreation")
 @Composable
 fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntityData, recordIndex: Int) {
 
@@ -317,7 +317,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
     remember { FocusRequester() }
 
     CustomTextField(
-        label = "CNIC",
+        label = stringResource(R.string.cnic),
         value = customerRecord.cnic.value?: ""  ,
         onValueChange = {viewModel.customerRecords[recordIndex].cnic.value = it},
         validationType = ValidationType.CNIC,
@@ -326,7 +326,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
     )
 
     CustomTextField(
-        label = "Name" ,
+        label = stringResource(R.string.name) ,
         value = customerRecord.name.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].name.value = it},
         imeAction = ImeAction.Next,
@@ -334,7 +334,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
     )
 
     CustomTextField(
-        label = "Father's Name" ,
+        label = stringResource(R.string.father_s_name) ,
         value = customerRecord.fatherName.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].fatherName.value = it},
         imeAction = ImeAction.Next,
@@ -342,7 +342,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
     )
 
     CustomTextField(
-        label = "Permanent Address" ,
+        label = stringResource(R.string.permanent_address) ,
         value = customerRecord.permanentAddress.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].permanentAddress.value = it},
         imeAction = ImeAction.Next,
@@ -359,7 +359,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
     )
 
     CustomTextField(
-        label = "Cell No",
+        label = stringResource(R.string.cell_no),
         value = customerRecord.cellNo.value,
         onValueChange = { viewModel.customerRecords[recordIndex].cellNo.value = it },
         validationType = ValidationType.MOBILE,
@@ -369,7 +369,7 @@ fun LocalAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntity
 
 }
 
-@SuppressLint("AutoboxingStateCreation")
+
 @Composable
 fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEntityData, recordIndex: Int){
 
@@ -378,7 +378,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
     remember { FocusRequester() }
 
     CustomTextField(
-        label = "Name" ,
+        label = stringResource(R.string.name) ,
         value = customerRecord.name.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].name.value = it},
         imeAction = ImeAction.Next,
@@ -386,14 +386,14 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
     )
 
     CustomTextField(
-        label = "Father's Name" ,
+        label = stringResource(R.string.father_s_name) ,
         value = customerRecord.fatherName.value,
         onValueChange ={viewModel.customerRecords[recordIndex].fatherName.value = it},
         imeAction = ImeAction.Next,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
     CustomTextField(
-        label = "Passport Number",
+        label = stringResource(R.string.passport_number),
         value = customerRecord.passportNo.value?: "",
         onValueChange = {viewModel.customerRecords[recordIndex].passportNo.value = it},
         validationType = ValidationType.PASSPORT,
@@ -403,7 +403,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
     )
 
     CustomDateField(
-        label = " Visa up till",
+        label = stringResource(R.string.visa_up_till),
         value = customerRecord.visaUpTill.value?: 0L,
         onDateSelected = {viewModel.customerRecords[recordIndex].visaUpTill.value = it},
         isClickable = true
@@ -429,7 +429,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
     )
 
     CustomTextField(
-        label = "Permanent Address" ,
+        label = stringResource(R.string.permanent_address) ,
         value = customerRecord.permanentAddress.value ,
         onValueChange ={viewModel.customerRecords[recordIndex].permanentAddress.value = it},
         imeAction = ImeAction.Next,
@@ -437,7 +437,7 @@ fun ForeignAddRecord(viewModel: AddRecordViewModel, customerRecord: CustomerEnti
     )
 
     CustomTextField(
-        label = "Country",
+        label = stringResource(R.string.country),
         value = customerRecord.country.value?: "",
         onValueChange = { viewModel.customerRecords[recordIndex].country.value = it },
         imeAction = ImeAction.Done,

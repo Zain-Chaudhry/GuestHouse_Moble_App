@@ -1,6 +1,5 @@
 package com.example.diamondguesthouse.viewmodel
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -17,29 +16,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@SuppressLint("MutableCollectionMutableState")
+
 class SearchRecordViewModel : ViewModel() {
 
     var roomNo: String by mutableStateOf("Please Select")
     var roomPrice: String by mutableStateOf("")
-    var checkInDate: Long by mutableLongStateOf(System.currentTimeMillis())
+    private var checkInDate: Long by mutableLongStateOf(System.currentTimeMillis())
     var checkOutDate: Long by mutableLongStateOf(0L)
     private var checkInTime: Long by mutableLongStateOf(System.currentTimeMillis())
     var checkOutTime: Long by mutableLongStateOf(0L)
-    // Store the input for CNIC or passport number
+
     var cnic by mutableStateOf("")
     var passportNo by mutableStateOf("")
     var searchResults = mutableStateListOf<CustomerEntity>()// Update to a list
     var errorMessage by mutableStateOf("")
-//    var selectedCustomers = mutableStateListOf<CustomerEntity>()
+
+    //    var selectedCustomers = mutableStateListOf<CustomerEntity>()
     var selectedCustomers by mutableStateOf(listOf<CustomerEntity>())
-
-
 
 
     fun addCustomer(customer: CustomerEntity) {
         if (!selectedCustomers.contains(customer)) {
-           val updatedList = selectedCustomers.toMutableList()
+            val updatedList = selectedCustomers.toMutableList()
             updatedList.add(customer)
             selectedCustomers = updatedList
 
@@ -56,22 +54,22 @@ class SearchRecordViewModel : ViewModel() {
     fun searchCustomer(customerDao: CustomerDao) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                    // Fetch the list of customers from the DAO
-                    val results = customerDao.getCustomerByCnicOrPassport(cnic.ifBlank { null }, passportNo.ifBlank { null })
-                    withContext(Dispatchers.Main) {
-                        if (results.isNotEmpty()) {
+                val results = customerDao.getCustomerByCnicOrPassport(cnic.ifBlank { null },
+                    passportNo.ifBlank { null })
+                withContext(Dispatchers.Main) {
+                    if (results.isNotEmpty()) {
 
-                            // Add new results to existing searchResults
-                            searchResults.addAll(results.filter { it !in searchResults })
-                            errorMessage = "" // Clear error message on successful search
-                        } else {
-                            errorMessage = "No customers found"
-                        }
+                        // Add new results to existing searchResults
+                        searchResults.addAll(results.filter { it !in searchResults })
+                        errorMessage = "" // Clear error message on successful search
+                    } else {
+                        errorMessage = "No customers found"
                     }
+                }
             } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        errorMessage = "Error occurred: ${e.message}"
-                    }
+                withContext(Dispatchers.Main) {
+                    errorMessage = "Error occurred: ${e.message}"
+                }
             }
         }
     }

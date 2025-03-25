@@ -26,8 +26,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             DiamondGuestHouseTheme {
                AppNavigation()
-//                SearchRecord(rememberNavController())
-
                 }
             }
         }

@@ -8,7 +8,9 @@ import com.example.diamondguesthouse.data.GuestHouseDatabase
 import com.example.diamondguesthouse.data.dao.RoomsDao
 import com.example.diamondguesthouse.data.model.RoomWithCustomers
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class ViewBookingViewModel(dao: RoomsDao): ViewModel() {
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -214,12 +215,15 @@ fun CardButtons(title: String, image: Int, modifier: Modifier, navController: Na
                 .clickable { navController.navigate(navigateTo) }
                 .fillMaxSize()
         ) {
-            Column {
+            Column(
+                modifier = Modifier.matchParentSize().align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
                 Image(
                     painter = painterResource(id = image),
                     contentDescription = null,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally) // Center the image horizontally
                         .padding(bottom = 8.dp) // Add padding as needed
                 )
                 Text(
@@ -227,8 +231,6 @@ fun CardButtons(title: String, image: Int, modifier: Modifier, navController: Na
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.Start) // Align the text to the start of the Column
                 )
             }
         }

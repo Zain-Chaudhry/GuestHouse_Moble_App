@@ -1,5 +1,22 @@
 <resources>
     <string name="app_name">Diamond Guest House</string>
     <string name="Web_Client_ID">8500143231-smnr1sa7c9fvturgk8rpacv0npd14ut6.apps.googleusercontent.com</string>
+    <string name="add_record">Add Record</string>
+    <string name="foreigner">Foreigner</string>
+    <string name="local">Local</string>
+    <string name="check_in_date">Check in Date</string>
+    <string name="room_no">Room No.</string>
+    <string name="check_in_time">Check In Time</string>
+    <string name="check_out_date">Check Out Date</string>
+    <string name="check_out_time">Check Out Time</string>
+    <string name="amount_received">Amount Received</string>
+    <string name="cnic">CNIC</string>
+    <string name="name">Name</string>
+    <string name="father_s_name">Father\'s Name</string>
+    <string name="permanent_address">Permanent Address</string>
+    <string name="cell_no">Cell No</string>
+    <string name="passport_number">Passport Number</string>
+    <string name="visa_up_till">" Visa up till"</string>
+    <string name="country">Country</string>
 
 </resources>
