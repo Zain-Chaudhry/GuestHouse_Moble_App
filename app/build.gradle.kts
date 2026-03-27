@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,13 +10,12 @@ plugins {
 
 android {
     namespace = "com.example.diamondguesthouse"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.diamondguesthouse"
         minSdk = 27
-        //noinspection OldTargetApi
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -33,19 +34,19 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+
+    // Remove composeOptions { kotlinCompilerExtensionVersion = "1.5.1" }
+    // because you're already using org.jetbrains.kotlin.plugin.compose
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -53,8 +54,13 @@ android {
     }
 }
 
-dependencies {
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
+    }
+}
 
+dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
@@ -76,22 +82,23 @@ dependencies {
     implementation(libs.androidx.benchmark.macro)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.graphics.core)
     implementation(libs.androidx.graphics.path)
     implementation(libs.androidx.graphics.shapes)
-//    implementation(libs.androidx.graphics.shapes)
     implementation(libs.androidx.core.splashscreen)
+
     testImplementation(libs.junit)
+
+    // Use direct coordinates once to verify the catalog is not the problem
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
     implementation(libs.androidx.credentials)
-    //for Android 13 and below
     implementation(libs.androidx.credentials.play.services.auth)
 }
