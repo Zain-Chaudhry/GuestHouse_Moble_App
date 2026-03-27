@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.DiamondGuestHouse" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Material Components NoActionBar: removes system action/title bar for full-screen Compose (avoids OEM caption strip with app label). -->
+    <style name="Theme.DiamondGuestHouse" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 
     <style name="Theme.app.starting" parent="Theme.SplashScreen">
+        <item name="android:windowNoTitle">true</item>
         <item name="windowSplashScreenBackground">#FF2F7E79</item>
         <item name="postSplashScreenTheme">@style/Theme.DiamondGuestHouse</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
