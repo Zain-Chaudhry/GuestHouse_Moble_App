@@ -102,12 +102,6 @@ app/src/main/java/com/example/diamondguesthouse/
 
 ---
 
-## License
-
-This project is provided as-is for the Diamond Guest House app. Add a `LICENSE` file in the repository if you want a standard open-source license.
-
----
-
 ## Contributing
 
 Issues and pull requests are welcome. Please keep changes focused, match existing Kotlin/Compose style, and run a **Debug** build before submitting.
