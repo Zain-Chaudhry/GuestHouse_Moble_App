@@ -2,8 +2,13 @@ package com.example.diamondguesthouse.data.mapper
 
 import com.example.diamondguesthouse.core.EntityModelMapper
 import com.example.diamondguesthouse.data.local.entities.CustomerEntity
+import com.example.diamondguesthouse.di.MapperQualifiers
 import com.example.diamondguesthouse.domain.models.CustomerModel
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 
+@Factory
+@Named(MapperQualifiers.CUSTOMER)
 class CustomerEntityModelMapper : EntityModelMapper<CustomerEntity, CustomerModel> {
     override fun entityToModel(entity: CustomerEntity): CustomerModel = CustomerModel(
         customerId = entity.customerId,

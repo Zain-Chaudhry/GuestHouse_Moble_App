@@ -43,6 +43,7 @@ import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.appNavigation.GuestHouseNavKey
 import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.presentation.search_booking.SearchBookingScreenViewModel
 import com.example.diamondguesthouse.presentation.search_booking.SearchBookingUserEvent
 import org.koin.compose.viewmodel.koinActivityViewModel
@@ -84,7 +85,7 @@ fun SearchRecordScreen(
                     contentDescription = null,
                     modifier = Modifier.clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = "Search Customer",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -110,12 +111,12 @@ fun SearchRecordScreen(
                         Tab(
                             selected = selectedTab.intValue == 0,
                             onClick = { selectedTab.intValue = 0 },
-                            text = { Text("Local") },
+                            text = { GenericTextView("Local") },
                         )
                         Tab(
                             selected = selectedTab.intValue == 1,
                             onClick = { selectedTab.intValue = 1 },
-                            text = { Text("Foreigner") },
+                            text = { GenericTextView("Foreigner") },
                         )
                     }
                     Column(
@@ -126,7 +127,7 @@ fun SearchRecordScreen(
                         when (selectedTab.intValue) {
                             0 -> {
                                 OutlinedTextField(
-                                    label = { Text("Enter CNIC") },
+                                    label = { GenericTextView("Enter CNIC") },
                                     value = uiState.cnic,
                                     onValueChange = {
                                         sharedViewModel.submitUserEvent(SearchBookingUserEvent.CnicChanged(it))
@@ -139,12 +140,12 @@ fun SearchRecordScreen(
                                 )
                                 androidx.compose.foundation.layout.Spacer(modifier = Modifier.size(10.dp))
                                 Button(onClick = { sharedViewModel.submitUserEvent(SearchBookingUserEvent.SearchClicked) }) {
-                                    Text(text = "Search")
+                                    GenericTextView(text = "Search")
                                 }
                                 if (uiState.searchError.isNotEmpty()) {
-                                    Text(text = uiState.searchError, color = Color.Red)
+                                    GenericTextView(text = uiState.searchError, color = Color.Red)
                                 } else if (uiState.searchResults.isNotEmpty()) {
-                                    Text(text = "Customers Found:", fontWeight = FontWeight.Bold)
+                                    GenericTextView(text = "Customers Found:", fontWeight = FontWeight.Bold)
                                     LazyColumn {
                                         items(uiState.searchResults) { customer ->
                                             Row(
@@ -173,7 +174,7 @@ fun SearchRecordScreen(
                                                         Log.d("SelectedCustomers", "Selected: ${uiState.selectedCustomers}")
                                                     },
                                                 )
-                                                Text(text = "${customer.name} (${customer.cnic})")
+                                                GenericTextView(text = "${customer.name} (${customer.cnic})")
                                             }
                                         }
                                     }
@@ -181,16 +182,16 @@ fun SearchRecordScreen(
                                         Button(onClick = {
                                             onNavigate(NavCommand.Push(GuestHouseNavKey.BookingBySearch))
                                         }) {
-                                            Text("Proceed to booking")
+                                            GenericTextView("Proceed to booking")
                                         }
                                     } else {
-                                        Text("No customers selected")
+                                        GenericTextView("No customers selected")
                                     }
                                 }
                             }
                             1 -> {
                                 OutlinedTextField(
-                                    label = { Text("Enter Passport No") },
+                                    label = { GenericTextView("Enter Passport No") },
                                     value = uiState.passportNo,
                                     onValueChange = {
                                         sharedViewModel.submitUserEvent(SearchBookingUserEvent.PassportChanged(it))
@@ -201,12 +202,12 @@ fun SearchRecordScreen(
                                     ),
                                 )
                                 Button(onClick = { sharedViewModel.submitUserEvent(SearchBookingUserEvent.SearchClicked) }) {
-                                    Text(text = "Search")
+                                    GenericTextView(text = "Search")
                                 }
                                 if (uiState.searchError.isNotEmpty()) {
-                                    Text(text = uiState.searchError, color = Color.Red)
+                                    GenericTextView(text = uiState.searchError, color = Color.Red)
                                 } else if (uiState.searchResults.isNotEmpty()) {
-                                    Text(text = "Customers Found:", fontWeight = FontWeight.Bold)
+                                    GenericTextView(text = "Customers Found:", fontWeight = FontWeight.Bold)
                                     LazyColumn {
                                         items(uiState.searchResults) { customer ->
                                             Row(
@@ -234,7 +235,7 @@ fun SearchRecordScreen(
                                                         }
                                                     },
                                                 )
-                                                Text(text = "${customer.name} (${customer.passportNo})")
+                                                GenericTextView(text = "${customer.name} (${customer.passportNo})")
                                             }
                                         }
                                     }
@@ -242,10 +243,10 @@ fun SearchRecordScreen(
                                         Button(onClick = {
                                             onNavigate(NavCommand.Push(GuestHouseNavKey.BookingBySearch))
                                         }) {
-                                            Text("Proceed to booking")
+                                            GenericTextView("Proceed to booking")
                                         }
                                     } else {
-                                        Text("No customers selected")
+                                        GenericTextView("No customers selected")
                                     }
                                 }
                             }

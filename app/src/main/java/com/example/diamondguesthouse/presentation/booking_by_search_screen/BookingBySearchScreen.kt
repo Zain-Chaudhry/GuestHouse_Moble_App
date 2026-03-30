@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +38,7 @@ import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
 import com.example.diamondguesthouse.core.presentation.CustomDateField
 import com.example.diamondguesthouse.core.presentation.CustomTextField
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.core.presentation.TimeField
 import com.example.diamondguesthouse.presentation.add_record_screen.component.AddRecordDropdown
 import com.example.diamondguesthouse.presentation.search_booking.SearchBookingScreenViewModel
@@ -91,7 +91,7 @@ fun BookingBySearchScreen(
                         .align(Alignment.CenterStart)
                         .clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = "New Booking",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -120,12 +120,12 @@ fun BookingBySearchScreen(
                     item {
                         SearchBookingRoomForm(sharedViewModel, uiState)
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text(text = "Customers:", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                        GenericTextView(text = "Customers:", fontSize = 16.sp, fontWeight = FontWeight.Medium)
                         Spacer(modifier = Modifier.size(10.dp))
                     }
                     if (uiState.selectedCustomers.isEmpty()) {
                         item {
-                            Text(text = "No customers selected", modifier = Modifier.padding(16.dp))
+                            GenericTextView(text = "No customers selected", modifier = Modifier.padding(16.dp))
                         }
                     } else {
                         items(uiState.selectedCustomers) { customer ->
@@ -135,7 +135,7 @@ fun BookingBySearchScreen(
                                     .fillMaxWidth()
                                     .padding(8.dp),
                             ) {
-                                Text(
+                                GenericTextView(
                                     text = "${uiState.selectedCustomers.indexOf(customer) + 1}. ${customer.name}",
                                 )
                             }
@@ -147,7 +147,7 @@ fun BookingBySearchScreen(
                                 sharedViewModel.submitUserEvent(SearchBookingUserEvent.ConfirmBookingClicked)
                             },
                         ) {
-                            Text(text = "Confirm Booking")
+                            GenericTextView(text = "Confirm Booking")
                         }
                     }
                 }

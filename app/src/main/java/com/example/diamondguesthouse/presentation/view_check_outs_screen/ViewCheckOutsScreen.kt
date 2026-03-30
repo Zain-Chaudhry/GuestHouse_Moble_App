@@ -31,8 +31,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.domain.models.RoomWithCustomersModel
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ViewCheckOutsScreen(
@@ -69,7 +70,7 @@ fun ViewCheckOutsScreen(
                         .align(Alignment.CenterStart)
                         .clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = "Bookings",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -98,7 +99,7 @@ fun ViewCheckOutsScreen(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(text = "No Check-Outs for today", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        GenericTextView(text = "No Check-Outs for today", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 } else {
                     CheckOutsList(todayCheckOuts)
@@ -117,7 +118,7 @@ private fun CheckOutsList(todayCheckOuts: List<RoomWithCustomersModel>) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
-            Text(text = "Today's Check-Outs:", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            GenericTextView(text = "Today's Check-Outs:", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.size(8.dp))
             Row(
                 modifier = Modifier
@@ -126,9 +127,9 @@ private fun CheckOutsList(todayCheckOuts: List<RoomWithCustomersModel>) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "Room No", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text(text = "Price", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text(text = "Customer", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                GenericTextView(text = "Room No", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                GenericTextView(text = "Price", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                GenericTextView(text = "Customer", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
             }
         }
         items(todayCheckOuts) { checkOut ->
@@ -139,16 +140,16 @@ private fun CheckOutsList(todayCheckOuts: List<RoomWithCustomersModel>) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = checkOut.room.roomNo, fontSize = 16.sp, modifier = Modifier.weight(1f))
-                Text(text = "${checkOut.room.roomPrice}", fontSize = 16.sp, modifier = Modifier.weight(1f))
+                GenericTextView(text = checkOut.room.roomNo, fontSize = 16.sp, modifier = Modifier.weight(1f))
+                GenericTextView(text = "${checkOut.room.roomPrice}", fontSize = 16.sp, modifier = Modifier.weight(1f))
                 if (checkOut.customers.isNotEmpty()) {
-                    Text(text = checkOut.customers[0].name, fontSize = 16.sp, modifier = Modifier.weight(1f))
+                    GenericTextView(text = checkOut.customers[0].name, fontSize = 16.sp, modifier = Modifier.weight(1f))
                 }
             }
         }
         item {
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = "Total Check Outs: ${todayCheckOuts.size}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            GenericTextView(text = "Total Check Outs: ${todayCheckOuts.size}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.size(8.dp))
         }
     }

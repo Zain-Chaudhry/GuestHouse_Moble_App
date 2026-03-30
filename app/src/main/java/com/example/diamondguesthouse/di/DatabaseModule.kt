@@ -17,9 +17,7 @@ class DatabaseModule {
             context,
             GuestHouseDatabase::class.java,
             "guestHouse_database",
-        )
-            .fallbackToDestructiveMigration()
-            .build()
+        ).build()
 
     @Single
     fun roomsDao(db: GuestHouseDatabase): RoomsDao = db.roomDao()

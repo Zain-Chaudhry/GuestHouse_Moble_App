@@ -31,7 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
-import org.koin.androidx.compose.koinViewModel
+import com.example.diamondguesthouse.core.presentation.GenericTextView
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ViewBookingScreen(
@@ -68,7 +69,7 @@ fun ViewBookingScreen(
                         .align(Alignment.CenterStart)
                         .clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = "Bookings",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -97,7 +98,7 @@ fun ViewBookingScreen(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(text = "No Bookings for today", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        GenericTextView(text = "No Bookings for today", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 } else {
                     ViewBookingList(todayCheckIns)
@@ -116,7 +117,7 @@ private fun ViewBookingList(todayCheckIns: List<com.example.diamondguesthouse.do
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
-            Text(text = "Today's Check Ins:", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            GenericTextView(text = "Today's Check Ins:", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.size(8.dp))
             Row(
                 modifier = Modifier
@@ -125,9 +126,9 @@ private fun ViewBookingList(todayCheckIns: List<com.example.diamondguesthouse.do
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "Room No", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text(text = "Price", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text(text = "Customer", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                GenericTextView(text = "Room No", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                GenericTextView(text = "Price", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                GenericTextView(text = "Customer", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
             }
         }
         items(todayCheckIns) { checkIn ->
@@ -138,16 +139,16 @@ private fun ViewBookingList(todayCheckIns: List<com.example.diamondguesthouse.do
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = checkIn.room.roomNo, fontSize = 16.sp, modifier = Modifier.weight(1f))
-                Text(text = "${checkIn.room.roomPrice}", fontSize = 16.sp, modifier = Modifier.weight(1f))
+                GenericTextView(text = checkIn.room.roomNo, fontSize = 16.sp, modifier = Modifier.weight(1f))
+                GenericTextView(text = "${checkIn.room.roomPrice}", fontSize = 16.sp, modifier = Modifier.weight(1f))
                 if (checkIn.customers.isNotEmpty()) {
-                    Text(text = checkIn.customers[0].name, fontSize = 16.sp, modifier = Modifier.weight(1f))
+                    GenericTextView(text = checkIn.customers[0].name, fontSize = 16.sp, modifier = Modifier.weight(1f))
                 }
             }
         }
         item {
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = "Total Check Ins: ${todayCheckIns.size}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            GenericTextView(text = "Total Check Ins: ${todayCheckIns.size}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.size(8.dp))
         }
     }

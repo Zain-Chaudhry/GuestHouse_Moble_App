@@ -5,12 +5,14 @@ import com.example.diamondguesthouse.domain.repo.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.KoinViewModel
 
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
 )
 
+@KoinViewModel
 class LoginScreenViewModel(
     private val authRepository: AuthRepository,
 ) : GenericViewModel<LoginUserEvent, LoginUiEvent>() {

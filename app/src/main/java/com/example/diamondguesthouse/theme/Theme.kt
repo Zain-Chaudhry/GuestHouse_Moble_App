@@ -1,4 +1,4 @@
-package com.example.diamondguesthouse.ui.theme
+package com.example.diamondguesthouse.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

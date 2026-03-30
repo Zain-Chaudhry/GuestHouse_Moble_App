@@ -25,8 +25,9 @@ import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.appNavigation.GuestHouseNavKey
 import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.core.presentation.PrimaryButton
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SettingScreen(
@@ -69,7 +70,7 @@ fun SettingScreen(
                         .align(Alignment.CenterStart)
                         .clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = "Settings",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,

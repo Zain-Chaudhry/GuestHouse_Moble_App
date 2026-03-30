@@ -45,9 +45,10 @@ import com.example.diamondguesthouse.domain.models.AuthState
 import com.example.diamondguesthouse.core.presentation.PrimaryButton
 import com.example.diamondguesthouse.core.presentation.PrimaryTextButton
 import com.example.diamondguesthouse.core.presentation.EmailTextField
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.core.presentation.NameTextField
 import com.example.diamondguesthouse.core.presentation.PasswordTextField
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SignUpScreen(
@@ -81,7 +82,7 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             Spacer(modifier = Modifier.height(10.dp))
-            Text(
+            GenericTextView(
                 text = "Sign Up to get started",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -98,7 +99,7 @@ fun SignUpScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Spacer(modifier = Modifier.height(14.dp))
-                    Text(
+                    GenericTextView(
                         text = "Sign Up",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -163,7 +164,7 @@ fun SignUpScreen(
                             thickness = 1.dp,
                             color = MaterialTheme.colorScheme.onBackground,
                         )
-                        Text(
+                        GenericTextView(
                             text = "or Sign Up with",
                             modifier = Modifier.padding(horizontal = 8.dp),
                             fontSize = 16.sp,
@@ -193,7 +194,7 @@ fun SignUpScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(text = "Already have an account?", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+                        GenericTextView(text = "Already have an account?", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
                         PrimaryTextButton(
                             text = "Log In",
                             fontSize = 16.sp,

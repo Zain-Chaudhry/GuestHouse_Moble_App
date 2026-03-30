@@ -41,8 +41,9 @@ import com.example.diamondguesthouse.domain.models.AuthState
 import com.example.diamondguesthouse.core.presentation.PrimaryButton
 import com.example.diamondguesthouse.core.presentation.PrimaryTextButton
 import com.example.diamondguesthouse.core.presentation.EmailTextField
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.core.presentation.PasswordTextField
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
@@ -73,7 +74,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             Spacer(modifier = Modifier.height(104.dp))
-            Text(
+            GenericTextView(
                 text = "Login into your account",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -90,7 +91,7 @@ fun LoginScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Spacer(modifier = Modifier.height(14.dp))
-                    Text(
+                    GenericTextView(
                         text = "Log In",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -142,7 +143,7 @@ fun LoginScreen(
                             thickness = 1.dp,
                             color = MaterialTheme.colorScheme.onBackground,
                         )
-                        Text(
+                        GenericTextView(
                             text = "or Log in with",
                             modifier = Modifier.padding(horizontal = 8.dp),
                             fontSize = 16.sp,
@@ -172,7 +173,7 @@ fun LoginScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(text = "Don't have an account?", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+                        GenericTextView(text = "Don't have an account?", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
                         PrimaryTextButton(
                             text = "Sign Up",
                             fontSize = 16.sp,

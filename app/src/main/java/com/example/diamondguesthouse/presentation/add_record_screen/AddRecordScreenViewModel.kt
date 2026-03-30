@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
 data class AddRecordUiState(
     val roomNo: String = "Please Select",
@@ -49,6 +50,7 @@ sealed interface AddRecordUiEvent {
     data class Message(val text: String) : AddRecordUiEvent
 }
 
+@KoinViewModel
 class AddRecordScreenViewModel(
     private val roomRepository: RoomRepository,
     private val customerRepository: CustomerRepository,

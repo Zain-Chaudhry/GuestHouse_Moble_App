@@ -4,7 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.gms.google.services)
 }
@@ -44,10 +45,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-    // Remove composeOptions { kotlinCompilerExtensionVersion = "1.5.1" }
-    // because you're already using org.jetbrains.kotlin.plugin.compose
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -63,16 +60,22 @@ kotlin {
 
 
 dependencies {
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp.compiler)
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.json)
+
+    // Koin
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core.coroutines)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.navigation)
+
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.firebase.auth)
@@ -92,7 +95,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.google.material)
-    implementation(libs.androidx.benchmark.macro)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.graphics.core)
@@ -102,7 +104,6 @@ dependencies {
 
     testImplementation(libs.junit)
 
-    // Use direct coordinates once to verify the catalog is not the problem
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -114,4 +115,9 @@ dependencies {
 
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
+}
+
+koinCompiler {
+    userLogs = true // Enable logs for component detection and DSL/annotation processing, Default false
+    debugLogs = false // Enable verbose debug logs for internal plugin processing, Default false
 }

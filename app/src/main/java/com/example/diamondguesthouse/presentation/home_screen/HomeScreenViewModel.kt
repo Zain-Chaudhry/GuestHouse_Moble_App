@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import com.example.diamondguesthouse.appNavigation.GuestHouseNavKey
+import org.koin.core.annotation.KoinViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Calendar
 
+@KoinViewModel
 class HomeScreenViewModel(
     private val roomRepository: RoomRepository,
 ) : GenericViewModel<HomeUserEvent, HomeUiEvent>() {

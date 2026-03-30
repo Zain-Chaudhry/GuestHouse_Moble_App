@@ -27,8 +27,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.presentation.add_record_screen.component.AddRecordDropdown
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ReportScreen(
@@ -66,7 +67,7 @@ fun ReportScreen(
                         .align(Alignment.CenterStart)
                         .clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = "Report",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -102,26 +103,26 @@ fun ReportScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     if (uiState.reportType != "Please Select") {
-                        Text(
+                        GenericTextView(
                             text = "Selected Report Type: ${uiState.reportType}",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(
+                        GenericTextView(
                             text = "Total Check-Ins: ${uiState.totalCheckIns}",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                         )
-                        Text(
+                        GenericTextView(
                             text = "Total Income: ${uiState.totalIncome} Rs.",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Report Generated Successfully!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Text(text = "Thank you for using our application!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Text(text = "Have a great day!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        GenericTextView(text = "Report Generated Successfully!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        GenericTextView(text = "Thank you for using our application!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        GenericTextView(text = "Have a great day!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }

@@ -2,6 +2,9 @@ package com.example.diamondguesthouse.presentation.forgot_password_screen
 
 import com.example.diamondguesthouse.core.utils.GenericViewModel
 import com.example.diamondguesthouse.domain.repo.AuthRepository
+import org.koin.core.annotation.KoinViewModel
+
+@KoinViewModel
 class ForgotPasswordScreenViewModel(
     private val authRepository: AuthRepository,
 ) : GenericViewModel<ForgotPasswordUserEvent, ForgotPasswordUiEvent>() {

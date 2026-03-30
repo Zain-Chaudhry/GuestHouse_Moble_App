@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    id("com.google.devtools.ksp") version "2.3.4" apply false
+    alias(libs.plugins.google.devtools.ksp) apply false
+    alias(libs.plugins.koin.compiler) apply false
     alias(libs.plugins.google.gms.google.services) apply false
 }

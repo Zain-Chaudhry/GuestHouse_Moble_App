@@ -36,8 +36,9 @@ import com.example.diamondguesthouse.R
 import com.example.diamondguesthouse.appNavigation.GuestHouseNavKey
 import com.example.diamondguesthouse.appNavigation.NavCommand
 import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
-import com.example.diamondguesthouse.ui.theme.Zinc
-import org.koin.androidx.compose.koinViewModel
+import com.example.diamondguesthouse.core.presentation.GenericTextView
+import com.example.diamondguesthouse.theme.Zinc
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
@@ -78,8 +79,8 @@ fun HomeScreen(
                     },
             ) {
                 Column {
-                    Text(text = viewModel.greetingMessage(), style = MaterialTheme.typography.bodyLarge, color = Color.White)
-                    Text(text = "Welcome to Diamond Guesthouse", style = MaterialTheme.typography.labelLarge, color = Color.White)
+                    GenericTextView(text = viewModel.greetingMessage(), style = MaterialTheme.typography.bodyLarge, color = Color.White)
+                    GenericTextView(text = "Welcome to Diamond Guesthouse", style = MaterialTheme.typography.labelLarge, color = Color.White)
                 }
             }
 
@@ -155,8 +156,8 @@ private fun HomeCardItem(
     ) {
         Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             Column(modifier = Modifier.align(Alignment.CenterStart)) {
-                Text(text = "Total Revenue", fontSize = 16.sp, color = Color.White)
-                Text(text = monthlyIncome, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                GenericTextView(text = "Total Revenue", fontSize = 16.sp, color = Color.White)
+                GenericTextView(text = monthlyIncome, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold)
             }
             Image(
                 painter = painterResource(id = R.drawable.ic_settings),
@@ -197,9 +198,9 @@ private fun HomeCardRowItem(image: Int, title: String, rooms: String, onClick: (
     ) {
         Image(painter = painterResource(id = image), contentDescription = null)
         Spacer(modifier = Modifier.size(8.dp))
-        Text(text = title, fontSize = 16.sp, color = Color.White)
+        GenericTextView(text = title, fontSize = 16.sp, color = Color.White)
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = rooms, fontSize = 20.sp, color = Color.White)
+        GenericTextView(text = rooms, fontSize = 20.sp, color = Color.White)
     }
 }
 
@@ -212,12 +213,12 @@ private fun HomeCardButtons(title: String, image: Int, modifier: Modifier, onCli
             .height(100.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Zinc)
+            .clickable(onClick = onClick)
             .padding(16.dp),
     ) {
         Box(
             modifier = Modifier
                 .weight(1f)
-                .clickable(onClick = onClick)
                 .fillMaxSize(),
         ) {
             Column(
@@ -230,7 +231,7 @@ private fun HomeCardButtons(title: String, image: Int, modifier: Modifier, onCli
                     contentDescription = null,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
-                Text(
+                GenericTextView(
                     text = title,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,

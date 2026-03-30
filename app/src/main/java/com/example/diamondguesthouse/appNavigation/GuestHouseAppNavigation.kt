@@ -1,5 +1,8 @@
 package com.example.diamondguesthouse.appNavigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -32,6 +35,20 @@ fun GuestHouseAppNavigation() {
         entryProvider = { key ->
             navEntry(key, onNavigate)
         },
+        // Forward navigation: new screen slides in from right, old slides out to left
+        transitionSpec = {
+            slideInHorizontally(initialOffsetX = { it }) togetherWith
+                    slideOutHorizontally(targetOffsetX = { -it })
+        },
+        // Back navigation: current screen slides out to right, previous slides in from left
+        popTransitionSpec = {
+            slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                    slideOutHorizontally(targetOffsetX = { it })
+        },
+        predictivePopTransitionSpec = {
+            slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                    slideOutHorizontally(targetOffsetX = { it })
+        }
     )
 }
 
@@ -42,33 +59,43 @@ private fun navEntry(
     GuestHouseNavKey.Login -> NavEntry(key) {
         LoginScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.SignUp -> NavEntry(key) {
         SignUpScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.ForgotPassword -> NavEntry(key) {
         ForgotPasswordScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.Home -> NavEntry(key) {
         HomeScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.AddRecord -> NavEntry(key) {
         AddRecordScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.SearchRecord -> NavEntry(key) {
         SearchRecordScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.BookingBySearch -> NavEntry(key) {
         BookingBySearchScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.ViewBooking -> NavEntry(key) {
         ViewBookingScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.ViewCheckOuts -> NavEntry(key) {
         ViewCheckOutsScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.Settings -> NavEntry(key) {
         SettingScreen(onNavigate = onNavigate)
     }
+
     GuestHouseNavKey.Report -> NavEntry(key) {
         ReportScreen(onNavigate = onNavigate)
     }

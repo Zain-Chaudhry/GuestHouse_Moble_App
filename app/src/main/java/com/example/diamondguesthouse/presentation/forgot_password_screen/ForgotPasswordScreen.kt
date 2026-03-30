@@ -34,7 +34,8 @@ import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
 import com.example.diamondguesthouse.domain.models.AuthState
 import com.example.diamondguesthouse.core.presentation.PrimaryButton
 import com.example.diamondguesthouse.core.presentation.EmailTextField
-import org.koin.androidx.compose.koinViewModel
+import com.example.diamondguesthouse.core.presentation.GenericTextView
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ForgotPasswordScreen(
@@ -65,7 +66,7 @@ fun ForgotPasswordScreen(
                 .padding(horizontal = 0.dp, vertical = 180.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            GenericTextView(
                 text = "Reset your Password",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -83,7 +84,7 @@ fun ForgotPasswordScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Text(
+                    GenericTextView(
                         text = "Enter your email to receive reset instructions",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground,

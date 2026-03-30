@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -23,6 +24,7 @@ sealed interface ReportUserEvent {
 
 sealed interface ReportUiEvent
 
+@KoinViewModel
 class ReportScreenViewModel(
     private val roomRepository: RoomRepository,
 ) : GenericViewModel<ReportUserEvent, ReportUiEvent>() {

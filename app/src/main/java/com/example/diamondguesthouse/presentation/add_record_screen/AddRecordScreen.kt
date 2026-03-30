@@ -1,6 +1,6 @@
 package com.example.diamondguesthouse.presentation.add_record_screen
 
-import android.widget.Toast
+import com.example.diamondguesthouse.core.utils.showToast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,9 +12,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,11 +43,13 @@ import com.example.diamondguesthouse.appNavigation.OnGuestHouseNavigate
 import com.example.diamondguesthouse.appNavigation.GuestHouseNavKey
 import com.example.diamondguesthouse.domain.models.CustomerDraftModel
 import com.example.diamondguesthouse.presentation.add_record_screen.component.AddRecordDropdown
+import com.example.diamondguesthouse.core.presentation.GuestHouseBackground
 import com.example.diamondguesthouse.core.presentation.CustomDateField
 import com.example.diamondguesthouse.core.presentation.CustomTextField
+import com.example.diamondguesthouse.core.presentation.GenericTextView
 import com.example.diamondguesthouse.core.presentation.TimeField
 import com.example.diamondguesthouse.core.presentation.ValidationType
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AddRecordScreen(
@@ -59,7 +63,7 @@ fun AddRecordScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEvents.collect { ev ->
             when (ev) {
-                is AddRecordUiEvent.Message -> Toast.makeText(context, ev.text, Toast.LENGTH_SHORT).show()
+                is AddRecordUiEvent.Message -> context.showToast(ev.text)
                 AddRecordUiEvent.NavigateHome -> onNavigate(NavCommand.ReplaceRoot(GuestHouseNavKey.Home))
             }
         }
@@ -67,10 +71,10 @@ fun AddRecordScreen(
 
     LaunchedEffect(uiState.customerStatus) {
         when (val s = uiState.customerStatus) {
-            is CustomerSubmitStatus.AlreadyCheckedIn -> Toast.makeText(context, s.message, Toast.LENGTH_SHORT).show()
-            is CustomerSubmitStatus.Error -> Toast.makeText(context, s.message, Toast.LENGTH_SHORT).show()
+            is CustomerSubmitStatus.AlreadyCheckedIn -> context.showToast(s.message)
+            is CustomerSubmitStatus.Error -> context.showToast(s.message)
             is CustomerSubmitStatus.CustomerAdded -> {
-                Toast.makeText(context, s.message, Toast.LENGTH_SHORT).show()
+                context.showToast(s.message)
                 onNavigate(NavCommand.ReplaceRoot(GuestHouseNavKey.Home))
                 viewModel.submitUserEvent(AddRecordUserEvent.ResetCustomerStatus)
             }
@@ -78,7 +82,7 @@ fun AddRecordScreen(
         }
     }
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    GuestHouseBackground { _ ->
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (topBar, nameRow, surface) = createRefs()
             Image(
@@ -106,7 +110,7 @@ fun AddRecordScreen(
                         .align(Alignment.CenterStart)
                         .clickable { onNavigate(NavCommand.Pop) },
                 )
-                Text(
+                GenericTextView(
                     text = stringResource(R.string.add_record),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -128,16 +132,33 @@ fun AddRecordScreen(
                     },
             ) {
                 Column {
-                    TabRow(selectedTabIndex = selectedTab.intValue) {
+                    PrimaryTabRow(
+                        selectedTabIndex = selectedTab.intValue,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
                         Tab(
+                            modifier = Modifier.weight(1f),
                             selected = selectedTab.intValue == 0,
                             onClick = { selectedTab.intValue = 0 },
-                            text = { Text(stringResource(R.string.local)) },
+                            text = {
+                                Text(
+                                    text = stringResource(R.string.local),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = LocalContentColor.current,
+                                )
+                            },
                         )
                         Tab(
+                            modifier = Modifier.weight(1f),
                             selected = selectedTab.intValue == 1,
                             onClick = { selectedTab.intValue = 1 },
-                            text = { Text(stringResource(R.string.foreigner)) },
+                            text = {
+                                Text(
+                                    text = stringResource(R.string.foreigner),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = LocalContentColor.current,
+                                )
+                            },
                         )
                     }
                     LazyColumn(
@@ -259,7 +280,7 @@ private fun AddRecordCustomerForm(
             .fillMaxWidth()
             .padding(bottom = 30.dp),
     ) {
-        Text("Submit")
+        GenericTextView("Submit")
     }
 }
 

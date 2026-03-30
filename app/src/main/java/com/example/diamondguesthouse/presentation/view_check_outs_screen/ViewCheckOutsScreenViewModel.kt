@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.diamondguesthouse.core.utils.GenericViewModel
 import com.example.diamondguesthouse.domain.models.RoomWithCustomersModel
 import com.example.diamondguesthouse.domain.repo.RoomRepository
+import org.koin.core.annotation.KoinViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -12,6 +13,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+@KoinViewModel
 class ViewCheckOutsScreenViewModel(
     roomRepository: RoomRepository,
 ) : GenericViewModel<ViewCheckOutsUserEvent, ViewCheckOutsUiEvent>() {

@@ -1,4 +1,4 @@
-package com.example.diamondguesthouse.ui.theme
+package com.example.diamondguesthouse.theme
 
 import androidx.compose.ui.graphics.Color
 

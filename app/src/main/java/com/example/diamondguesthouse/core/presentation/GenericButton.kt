@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun GenericButton(
+    modifier: Modifier = Modifier,
     text: String,
     fontWeight: FontWeight = FontWeight.Normal,
     onClick: () -> Unit,
     containerColor: Color = Color(0xFF1E3A5F),
     contentColor: Color = Color.White,
-    modifier: Modifier = Modifier,
     textSizeSp: Float = 15f,
     icon: @Composable (() -> Unit)? = null,
     shape: RoundedCornerShape = RoundedCornerShape(25.dp),

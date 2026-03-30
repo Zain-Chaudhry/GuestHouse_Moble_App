@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
 data class SearchBookingUiState(
     val roomNo: String = "Please Select",
@@ -45,6 +46,7 @@ sealed interface SearchBookingUiEvent {
     data class Message(val text: String) : SearchBookingUiEvent
 }
 
+@KoinViewModel
 class SearchBookingScreenViewModel(
     private val roomRepository: RoomRepository,
     private val customerRepository: CustomerRepository,

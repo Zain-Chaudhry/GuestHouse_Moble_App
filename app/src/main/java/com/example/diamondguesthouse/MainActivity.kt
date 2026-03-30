@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.diamondguesthouse.appNavigation.GuestHouseAppNavigation
 import com.example.diamondguesthouse.core.utils.InitialSplash
-import com.example.diamondguesthouse.ui.theme.DiamondGuestHouseTheme
+import com.example.diamondguesthouse.theme.DiamondGuestHouseTheme
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {

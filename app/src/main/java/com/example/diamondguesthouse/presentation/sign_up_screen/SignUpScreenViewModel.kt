@@ -2,6 +2,9 @@ package com.example.diamondguesthouse.presentation.sign_up_screen
 
 import com.example.diamondguesthouse.core.utils.GenericViewModel
 import com.example.diamondguesthouse.domain.repo.AuthRepository
+import org.koin.core.annotation.KoinViewModel
+
+@KoinViewModel
 class SignUpScreenViewModel(
     private val authRepository: AuthRepository,
 ) : GenericViewModel<SignUpUserEvent, SignUpUiEvent>() {
